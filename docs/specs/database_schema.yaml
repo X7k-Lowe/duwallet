@@ -3,7 +3,6 @@ tables:
     columns:
       id: uuid (PK, default gen_random_uuid())
       email: text unique not null
-      password_hash: text not null
       name: text not null
       gender: gender_enum
       multi_book: boolean default true

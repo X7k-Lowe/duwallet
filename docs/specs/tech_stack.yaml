@@ -12,6 +12,7 @@ frontend:
   pwa: next-pwa (Workbox)
   dateLib: date-fns
   i18n: none (日本語固定)
+  currency: "Intl.NumberFormat (JPY)"
 backend:
   baas: Supabase@^1.0
   db: PostgreSQL 15

@@ -1,6 +1,0 @@
-id: T01
-name: SetupEnvironment
-description: 'pnpm workspace init, install dependencies, configure Husky & lint-staged.'
-status: pending
-dependsOn: []
-estimatedHours: 1 

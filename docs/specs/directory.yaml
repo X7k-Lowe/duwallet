@@ -4,7 +4,7 @@
     web:
       next.config.mjs: {}
       src:
-        pages: "App Router"
+        app: "App Router (server & client components)"
         components: {}
         hooks: {}
         stores: {}
