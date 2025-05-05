@@ -21,9 +21,28 @@ Description: |
   - コード生成時は YAML をソースオブトゥルースとし、**ハルシネーションゼロ**・**省略禁止** を徹底する。
   - 変更差分は Pull Request で提示し、README / docs へ反映漏れが無いかレビューを行う。
   - ローカル・CI の両方で `pnpm test && playwright test --reporter=line` がグリーンになるまでタスクは **未完了** とみなす。
+  - `.eslintrc.json` に定義されたESLintルールに厳密に従ってコードを実装する：
+    - TypeScriptの型安全性を保ち、`any`型は極力使用しない
+    - 未使用変数は削除する
+    - Reactフックのルールを遵守する
+    - Tailwind CSSのクラス名ルールに従う
+    - Prettierによるコード整形ルールに準拠する
 
   ### 4. コミット規約
   - **Conventional Commits** を採用し、`type(scope): subject` 形式でメッセージを作成する。
+    - **主なタイプ(type)の例**:
+      - `feat`: 新機能の追加
+      - `fix`: バグ修正
+      - `docs`: ドキュメント更新
+      - `style`: コードスタイル変更（機能に影響なし）
+      - `refactor`: リファクタリング（機能に影響なし）
+      - `test`: テスト追加・修正
+      - `chore`: ビルドプロセスや補助ツールの変更
+      - `perf`: パフォーマンス改善
+      - `ci`: CI設定ファイルとスクリプトの変更
+      - `build`: ビルドシステムや外部依存関係の変更
+    - **scope**: 変更対象のコンポーネントや機能（例: `auth`, `ui`, `api`）
+    - **subject**: 変更内容の簡潔な説明（命令形で）
   - Pre-commit で **ESLint**, **Prettier** を自動修正し、lint-staged で対象ファイルを限定。
   - **コミット前チェック必須**:
     1. TypeScript, ESLint, CSS などのエラー、コンパイルエラーなどを全て解消する。
