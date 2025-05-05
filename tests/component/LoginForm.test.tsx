@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from '@/components/auth/LoginForm';
@@ -31,8 +31,8 @@ jest.mock('@/components/ui/input', () => ({
 // FormコンポーネントのモックはFormを実際のコンポーネントとして使用
 jest.mock('@/components/ui/form', () => {
   return {
-    Form: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    FormField: ({ render, name }: { render: (props: any) => React.ReactNode; name: string }) =>
+    Form: ({ children }: { children: ReactNode }) => <>{children}</>,
+    FormField: ({ render, name }: { render: (props: any) => ReactNode; name: string }) =>
       render({
         field: {
           name,
@@ -41,10 +41,10 @@ jest.mock('@/components/ui/form', () => {
           onBlur: jest.fn(),
         },
       }),
-    FormItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    FormLabel: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
-    FormControl: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    FormMessage: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
+    FormItem: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    FormLabel: ({ children }: { children: ReactNode }) => <label>{children}</label>,
+    FormControl: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    FormMessage: ({ children }: { children: ReactNode }) => <p>{children}</p>,
     useFormField: () => ({
       id: 'test-id',
       name: 'test-name',
