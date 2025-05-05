@@ -1,8 +1,64 @@
-# duwallet
+# DUWallet - 共同家計簿アプリ
 
-割勘計算機能を備えた共通家計簿 Web アプリ（モバイルファースト PWA）
+複数ユーザーが共同で管理する家計簿をスマートフォン中心に利用するPWAです。収入割合方式または残金均一方式で月次支払額を自動算出し、支払先・支払期限も含めて可視化します。
 
----
+## 環境構築
+
+### 要件
+
+- Node.js 18.0.0以上
+- pnpm 8.0.0以上
+- Docker Compose
+
+### セットアップ
+
+```bash
+# リポジトリのクローン
+git clone https://github.com/yourusername/duwallet.git
+cd duwallet
+
+# 依存関係のインストール
+npm install -g pnpm
+pnpm install
+
+# 環境変数の設定
+cp .env.example .env
+
+# Supabaseローカル環境の起動
+docker compose up -d supabase
+```
+
+### 開発サーバーの起動
+
+```bash
+pnpm dev
+```
+
+アプリケーションは [http://localhost:3000](http://localhost:3000) で利用できます。
+
+### テスト実行
+
+```bash
+# ユニットテスト
+pnpm test
+
+# E2Eテスト
+pnpm playwright test --reporter=line
+```
+
+## プロジェクト構成
+
+- `/apps/web` - Next.js 14アプリケーション (App Router)
+- `/packages/ui` - 共有UIコンポーネント
+- `/supabase` - Supabase関連ファイル (マイグレーション、Edge Functions)
+- `/docs` - プロジェクトドキュメント
+
+## 技術スタック
+
+- フロントエンド: Next.js 14, TypeScript, TailwindCSS, shadcn/ui
+- 状態管理: Zustand, TanStack Query
+- バックエンド: Supabase (PostgreSQL, Auth, Storage)
+- テスト: Jest, React Testing Library, Playwright
 
 ## 1. プロダクト概要
 
@@ -159,10 +215,10 @@ classDiagram
 | `roundDigit`   | 切上げ桁 (10^n)                   | 算出設定 `CalcSetting`   |
 | `incomeSource` | 収入参照先 (`prev` or `curr`) | 設定画面でユーザーが選択   |
 
-1. **収入割合方式**`payable = totalDue * (userIncome / (totalIncome - sharedIncome))`
-2. **残金均一方式**`payable = userIncome - ((totalIncome - totalExpense) / memberCount)`
+1. **収入割合方式** `payable = totalDue * (userIncome / (totalIncome - sharedIncome))`
+2. **残金均一方式** `payable = userIncome - ((totalIncome - totalExpense) / memberCount)`
 3. **ベース支払率 (BasePayRatio)**方式 1 の比率または方式 2 から導出した `payable / totalDue` を基準とし、管理者は ±(memberCount-1)% まで補正可。補正された比率は他メンバーに等分で反映。
-4. **端数処理**`ceil(payable / roundDigit) * roundDigit`
+4. **端数処理** `ceil(payable / roundDigit) * roundDigit`
 5. **収入参照先選択**
    月次計算前に `incomeSource` で「前月」または「今月」を指定。前月データが無い場合は今月固定。
 

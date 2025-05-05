@@ -1,0 +1,30 @@
+{
+  "name": "duwallet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "共同家計簿PWA",
+  "author": "ai-agent",
+  "scripts": {
+    "dev": "pnpm --filter @duwallet/web dev",
+    "build": "pnpm --filter @duwallet/web build",
+    "start": "pnpm --filter @duwallet/web start",
+    "lint": "pnpm --filter @duwallet/web lint",
+    "test": "pnpm --filter @duwallet/web test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "docs:build": "echo \"Scripts for building docs will be implemented here\"",
+    "db:reset": "echo \"Scripts for resetting DB will be implemented here\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.12.0"
+} 
