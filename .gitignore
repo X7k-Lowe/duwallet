@@ -39,3 +39,4 @@ next-env.d.ts
 apps/web/public/sw.js
 apps/web/public/sw.js.map
 apps/web/public/workbox-*.js
+apps/web/public/workbox-*.js.map
