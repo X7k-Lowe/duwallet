@@ -11,4 +11,6 @@ declare global {
     toBeUndefined(): void;
     [key: string]: any;
   };
-} 
+}
+
+export {};

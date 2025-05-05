@@ -4,10 +4,10 @@ declare namespace NodeJS {
     CI?: string;
     [key: string]: string | undefined;
   }
-  
+
   interface Process {
     env: ProcessEnv;
   }
 }
 
-declare const process: NodeJS.Process; 
+declare const process: NodeJS.Process;

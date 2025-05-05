@@ -5,13 +5,9 @@ declare module 'react' {
     // ReactNodeの定義
   }
 
-  export function createElement(
-    type: any,
-    props?: any,
-    ...children: any[]
-  ): any;
+  export function createElement(type: any, props?: any, ...children: any[]): any;
 
-  export interface HTMLAttributes<T> {
+  export interface HTMLAttributes<_T> {
     className?: string;
     style?: CSS.Properties;
     [key: string]: any;
