@@ -13,7 +13,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "docs:build": "echo \"Scripts for building docs will be implemented here\"",
     "db:reset": "echo \"Scripts for resetting DB will be implemented here\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "vercel-build": "cd apps/web && pnpm install && pnpm build"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",

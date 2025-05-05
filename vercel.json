@@ -1,4 +1,6 @@
 {
   "version": 2,
-  "framework": "nextjs"
+  "framework": null,
+  "buildCommand": "pnpm vercel-build",
+  "outputDirectory": "apps/web/.next"
 }
