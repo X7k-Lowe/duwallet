@@ -6,15 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/components/ui/button';
-import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
 const loginSchema = z.object({
@@ -37,6 +29,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
       email: '',
       password: '',
     },
+    mode: 'onSubmit',
   });
 
   const onSubmit = async (data: LoginFormValues) => {
@@ -48,9 +41,9 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
 
       if (error) {
         onError(error.message);
-      } else {
-        onSuccess();
+        return;
       }
+      onSuccess();
     } catch (err) {
       console.error('Login error:', err);
       onError('予期せぬエラーが発生しました。');
@@ -58,7 +51,11 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-sm space-y-8">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="w-full max-w-sm space-y-8"
+      data-testid="login-form"
+    >
       <FormField
         control={form.control}
         name="email"
@@ -66,7 +63,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
           <FormItem>
             <FormLabel>メールアドレス</FormLabel>
             <FormControl>
-              <Input placeholder="you@example.com" {...field} />
+              <Input data-testid="email-input" placeholder="you@example.com" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -79,13 +76,23 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
           <FormItem>
             <FormLabel>パスワード</FormLabel>
             <FormControl>
-              <Input type="password" placeholder="••••••••" {...field} />
+              <Input
+                data-testid="password-input"
+                type="password"
+                placeholder="••••••••"
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+      <Button
+        type="submit"
+        disabled={form.formState.isSubmitting}
+        className="w-full"
+        data-testid="login-button"
+      >
         {form.formState.isSubmitting ? 'ログイン中...' : 'ログイン'}
       </Button>
     </form>

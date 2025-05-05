@@ -2,7 +2,7 @@
   "extends": "../apps/web/tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["jest", "node", "@testing-library/jest-dom"],
+    "types": ["jest", "node"],
     "typeRoots": ["../node_modules/@types", "../apps/web/src/types"]
   },
   "include": ["../apps/web/src/**/*", "./**/*.ts", "./**/*.tsx"]

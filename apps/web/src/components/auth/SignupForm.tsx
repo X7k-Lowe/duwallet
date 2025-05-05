@@ -6,14 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createClient } from '@/utils/supabase/client'; // Import Supabase client
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
 // Note: Added password confirmation
@@ -77,7 +70,7 @@ export const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full max-w-sm">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-sm space-y-8">
       <FormField
         control={form.control}
         name="email"
