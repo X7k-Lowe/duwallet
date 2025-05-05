@@ -14,4 +14,4 @@ outputs:
   - .env.example
   - supabase/config.yaml
 tests: []
-status: pending
+status: done
