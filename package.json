@@ -10,6 +10,8 @@
     "start": "pnpm --filter @duwallet/web start",
     "lint": "pnpm --filter @duwallet/web lint",
     "test": "pnpm --filter @duwallet/web test",
+    "test:e2e": "pnpm --filter @duwallet/web test:e2e",
+    "test:all": "pnpm --filter @duwallet/web test:all",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "docs:build": "echo \"Scripts for building docs will be implemented here\"",
     "db:reset": "echo \"Scripts for resetting DB will be implemented here\"",
