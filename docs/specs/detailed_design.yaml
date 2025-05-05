@@ -1,0 +1,160 @@
+screens:
+  - id: A-01
+    name: Splash
+    url: /
+    components:
+      - Logo
+      - AuthStateChecker
+    transitions:
+      - condition: authenticated
+        target: B-01
+      - condition: unauthenticated
+        target: A-02
+  - id: A-02
+    name: Login
+    url: /login
+    components:
+      - LoginForm
+      - BiometricPrompt
+    transitions:
+      - condition: loginSuccess
+        target: B-01
+      - condition: signupLink
+        target: A-03
+  - id: A-03
+    name: Signup
+    url: /signup
+    components:
+      - SignupForm
+    transitions:
+      - condition: signupSuccess
+        target: B-01
+  - id: B-01
+    name: BookSelector
+    url: /books
+    components:
+      - BookList
+      - JoinByCodeModal
+      - CreateBookButton
+    transitions:
+      - target: C-01
+        action: selectBook
+      - target: B-02
+        action: clickCreate
+  - id: B-02
+    name: BookCreate
+    url: /books/new
+    components:
+      - BookCreateForm
+    transitions:
+      - target: C-01
+        condition: createSuccess
+  - id: C-01
+    name: Home
+    url: /books/:bookId
+    components:
+      - SummaryHeader
+      - MonthlyTotals
+      - NavigationDrawer
+    transitions:
+      - target: C-02
+        action: openEntries
+      - target: C-03
+        action: openPayees
+      - target: C-04
+        action: openCalc
+      - target: C-05
+        action: openBasic
+      - target: C-06
+        action: openUsers
+      - target: D-01
+        action: openProfile
+  - id: C-02
+    name: Entries
+    url: /books/:bookId/entries
+    components:
+      - EntryForm
+      - EntryTable
+    transitions:
+      - target: C-01
+        action: back
+  - id: C-03
+    name: Payees
+    url: /books/:bookId/payees
+    components:
+      - PayeeForm
+      - PayeeTable
+    transitions:
+      - target: C-01
+        action: back
+  - id: C-04
+    name: CalcSettings
+    url: /books/:bookId/settings/calc
+    components:
+      - CalcMethodSelector
+      - RoundDigitInput
+      - IncomeSourceSelector
+      - RatioAdjustmentTable
+    transitions:
+      - target: C-01
+        action: back
+  - id: C-05
+    name: BasicSettings
+    url: /books/:bookId/settings/basic
+    components:
+      - BookNameInput
+      - InviteCodeSwitch
+      - ReceiveRequestToggle
+    transitions:
+      - target: C-01
+        action: back
+  - id: C-06
+    name: UserManagement
+    url: /books/:bookId/users
+    components:
+      - UserRoleTable
+      - JoinRequestTable
+    transitions:
+      - target: C-01
+        action: back
+  - id: D-01
+    name: Profile
+    url: /me
+    components:
+      - ProfileForm
+    transitions:
+      - target: C-01
+        action: back
+api:
+  auth:
+    - method: POST
+      path: /auth/v1/token
+      desc: Supabase email/password login
+  books:
+    - method: POST
+      path: /rest/v1/books
+      desc: create new book
+    - method: GET
+      path: /rest/v1/books?select=*
+      desc: list joined books
+  entries:
+    - method: GET
+      path: /rest/v1/entries?bookId=eq.{id}&select=*
+    - method: POST
+      path: /rest/v1/entries
+    - method: PATCH
+      path: /rest/v1/entries?id=eq.{id}
+  payees:
+    - method: GET
+      path: /rest/v1/payees?bookId=eq.{id}
+    - method: POST
+      path: /rest/v1/payees
+  calcSettings:
+    - method: GET
+      path: /rest/v1/calc_settings?bookId=eq.{id}
+    - method: PATCH
+      path: /rest/v1/calc_settings?bookId=eq.{id}
+stateManagement:
+  globalStore: Zustand
+  serverState: TanStackQuery
+  offlineCache: IndexedDB via next-pwa 

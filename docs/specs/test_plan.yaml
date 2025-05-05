@@ -1,0 +1,42 @@
+unitTests:
+  coverageTarget: 90
+  tools:
+    - jest
+  modules:
+    - calc/payable.spec.ts
+    - hooks/useAuth.spec.ts
+componentTests:
+  tools:
+    - "@testing-library/react"
+  components:
+    - BookListItem.test.tsx
+    - JoinByCodeModal.test.tsx
+e2eTests:
+  coverageTarget: 30
+  tools:
+    - playwright
+  scenarios:
+    - id: E2E01
+      name: SignupAndLogin
+      steps:
+        - visit /signup
+        - fill form and submit
+        - confirm email via supabase API stub
+        - login and expect redirect /books
+    - id: E2E02
+      name: CreateBookAndEntry
+      steps:
+        - login
+        - click create book
+        - fill form and submit
+        - assert redirect /books/:id
+        - open entries and add income/expense
+migrationTests:
+  - name: schema up/down
+    description: supabase db reset && migrate --dry-run
+performanceBudget:
+  lcp: 2500 # ms
+  api99latency: 150 # ms
+accessibility:
+  tool: axe-playwright
+  target: WCAG 2.1 AA 

@@ -1,0 +1,80 @@
+tables:
+  users:
+    columns:
+      id: uuid (PK, default gen_random_uuid())
+      email: text unique not null
+      password_hash: text not null
+      name: text not null
+      gender: gender_enum
+      multi_book: boolean default true
+      created_at: timestamp default now()
+  books:
+    columns:
+      id: uuid (PK)
+      name: text not null
+      invite_code: text unique not null
+      receive_request: boolean default true
+      created_at: timestamp default now()
+  book_users:
+    columns:
+      user_id: uuid (FK users.id)
+      book_id: uuid (FK books.id)
+      role: role_enum default 'member'
+      approved: boolean default false
+      primaryKey: [user_id, book_id]
+  entries:
+    columns:
+      id: uuid (PK)
+      book_id: uuid (FK books.id)
+      year_month: date not null  # first day of month
+      user_id: uuid (FK users.id)
+      income: numeric(12,2) default 0
+      expense: numeric(12,2) default 0
+      shared_income: numeric(12,2) default 0
+      shared_expense: numeric(12,2) default 0
+  payees:
+    columns:
+      id: uuid (PK)
+      book_id: uuid (FK books.id)
+      name: text not null
+      due_day: text not null  # '4', '27', 'EOM'
+  calc_settings:
+    columns:
+      book_id: uuid (PK, FK books.id)
+      method: text default 'income_ratio' # or 'equal_balance'
+      round_digit: int default 1
+      income_source: text default 'curr' # or 'prev'
+      base_ratios: jsonb # {userId: number}
+
+enums:
+  gender_enum: [male, female, other]
+  role_enum: [admin, member]
+
+rlsPolicies:
+  users:
+    - name: self_access
+      definition: user_id() = id
+      command: SELECT, UPDATE
+  books:
+    - name: member_read
+      definition: exists(select 1 from book_users bu where bu.book_id = id and bu.user_id = user_id() and bu.approved)
+      command: SELECT
+  book_users:
+    - name: owner_insert
+      definition: user_id() = user_id
+      command: INSERT
+    - name: member_read
+      definition: user_id() = user_id
+      command: SELECT
+  entries:
+    - name: member_crud
+      definition: exists(select 1 from book_users where user_id = user_id() and book_id = entries.book_id and approved)
+      command: ALL
+  payees:
+    - name: admin_crud
+      definition: exists(select 1 from book_users where user_id = user_id() and book_id = payees.book_id and role='admin')
+      command: ALL
+  calc_settings:
+    - name: admin_update
+      definition: exists(select 1 from book_users where user_id = user_id() and book_id = calc_settings.book_id and role='admin')
+      command: UPDATE, SELECT 
