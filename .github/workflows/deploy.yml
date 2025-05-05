@@ -30,27 +30,3 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
           working-directory: ./
-
-  deploy-supabase:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Deploy Supabase Migrations
-        run: |
-          # Auth with access token
-          echo "${{ secrets.SUPABASE_ACCESS_TOKEN }}" | supabase login
-
-          # Link to existing project
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
-
-          # Push migrations to production
-          supabase db push
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

@@ -4,8 +4,8 @@ services:
     container_name: supabase-duwallet
     image: supabase/postgres:15.1.0.117
     ports:
-      - "54321:8000" # API
-      - "54322:5432" # DB
+      - '54321:8000' # API
+      - '5432:5432' # DB
     volumes:
       - ./supabase/migrations:/docker-entrypoint-initdb.d
       - ./supabase/functions:/app/functions
@@ -18,7 +18,7 @@ services:
       JWT_SECRET: your-super-secret-jwt-token-with-at-least-32-characters-long
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
       interval: 10s
       timeout: 5s
-      retries: 5 
+      retries: 5

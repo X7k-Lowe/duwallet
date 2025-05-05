@@ -16,4 +16,4 @@ declare module '@playwright/test' {
     reporter?: string | string[];
     [key: string]: any;
   }
-} 
+}

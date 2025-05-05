@@ -11,7 +11,7 @@ api:
   extra_includes:
     - extensions
 db:
-  port: 54322
+  port: 5432
   shadow_port: 54320
   major_version: 15
 studio:
@@ -27,4 +27,4 @@ functions:
     port: 54328
     env:
       RUNTIME: node
-    entrypoint: src/functions 
+    entrypoint: src/functions
