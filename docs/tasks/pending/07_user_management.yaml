@@ -1,0 +1,16 @@
+id: T-07
+title: User Management & Profile
+description: |
+  • Implement C-06 UserManagement and D-01 Profile screens
+  • Components: UserRoleTable, JoinRequestTable, ProfileForm
+  • Implement RLS checks for role updates & approvals
+  • Unit tests for UserRoleTable behavior
+  • Playwright test: admin approves join request
+  • Update Edge Function cleanup_old_cache deployment (if pending)
+dependsOn: [T-04]
+outputs:
+  - apps/web/src/app/books/[id]/users/page.tsx
+  - apps/web/src/app/me/page.tsx
+  - tests/component/UserRoleTable.test.tsx
+  - e2e/UserManagement.spec.ts
+status: pending 

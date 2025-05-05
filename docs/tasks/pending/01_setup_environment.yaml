@@ -1,0 +1,17 @@
+id: T-01
+title: Setup Project Environment
+description: |
+  • Initialize pnpm workspace & Next.js 14 project skeleton (apps/web)
+  • Configure TypeScript, ESLint, Prettier, Husky, lint-staged
+  • Add Supabase CLI, Docker Compose stack, and .env.example
+  • Ensure `pnpm install` and `docker compose up -d supabase` succeed locally
+dependsOn: []
+outputs:
+  - package.json
+  - pnpm-workspace.yaml
+  - apps/web/next.config.mjs
+  - docker-compose.yml
+  - .env.example
+  - supabase/config.yaml
+tests: []
+status: pending

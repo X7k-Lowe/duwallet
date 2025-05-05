@@ -1,0 +1,14 @@
+id: T-02
+title: Configure CI / CD
+description: |
+  • Add GitHub Actions workflow for install, lint, test, build, deploy preview
+  • Integrate Supabase CLI migration in CI
+  • Ensure ESLint & Prettier run via lint-staged in pre-commit hooks
+dependsOn: [T-01]
+outputs:
+  - .github/workflows/ci.yml
+  - .github/workflows/deploy.yml
+  - .husky/pre-commit
+  - lint-staged.config.js
+tests: []
+status: pending 
