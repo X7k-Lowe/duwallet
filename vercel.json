@@ -1,6 +1,7 @@
 {
   "version": 2,
-  "framework": null,
+  "framework": "nextjs",
   "buildCommand": "pnpm vercel-build",
-  "outputDirectory": "apps/web/.next"
+  "outputDirectory": "apps/web/.next",
+  "rewrites": [{ "source": "/(.*)", "destination": "/apps/web/$1" }]
 }
