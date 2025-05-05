@@ -12,4 +12,4 @@ const config: PlaywrightTestConfig = {
   reporter: 'line',
 };
 
-export default config; 
+export default config;

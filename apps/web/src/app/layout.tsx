@@ -11,11 +11,7 @@ export const metadata: Metadata = {
   description: '複数ユーザーが共同で管理する家計簿アプリ',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <body>
@@ -23,4 +19,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-} 
+}
