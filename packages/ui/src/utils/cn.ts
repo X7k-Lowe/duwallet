@@ -10,4 +10,4 @@ type ClassValue = string | number | ClassValue[] | Record<string, any> | undefin
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-} 
+}

@@ -7,11 +7,7 @@ const jsx = React.createElement;
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export const Input = ({
-  className,
-  type,
-  ...props
-}: InputProps) => {
+export const Input = ({ className, type, ...props }: InputProps) => {
   return (
     <input
       type={type}
@@ -22,4 +18,4 @@ export const Input = ({
       {...props}
     />
   );
-}; 
+};

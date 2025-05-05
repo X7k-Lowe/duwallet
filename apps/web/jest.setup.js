@@ -1,2 +1,4 @@
-// Add any global test setup here
-// This is a placeholder file for future test configurations
+// Learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+// Add any other global test setup here

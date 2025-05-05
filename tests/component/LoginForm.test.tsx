@@ -31,8 +31,8 @@ jest.mock('@/components/ui/input', () => ({
 // FormコンポーネントのモックはFormを実際のコンポーネントとして使用
 jest.mock('@/components/ui/form', () => {
   return {
-    Form: ({ children }: { children: ReactNode }) => <>{children}</>,
-    FormField: ({ render, name }: { render: (props: any) => ReactNode; name: string }) =>
+    Form: ({ children }: { children: any }) => <>{children}</>,
+    FormField: ({ render, name }: { render: (props: any) => any; name: string }) =>
       render({
         field: {
           name,
@@ -41,10 +41,10 @@ jest.mock('@/components/ui/form', () => {
           onBlur: jest.fn(),
         },
       }),
-    FormItem: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-    FormLabel: ({ children }: { children: ReactNode }) => <label>{children}</label>,
-    FormControl: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-    FormMessage: ({ children }: { children: ReactNode }) => <p>{children}</p>,
+    FormItem: ({ children }: { children: any }) => <div>{children}</div>,
+    FormLabel: ({ children }: { children: any }) => <label>{children}</label>,
+    FormControl: ({ children }: { children: any }) => <div>{children}</div>,
+    FormMessage: ({ children }: { children: any }) => <p>{children}</p>,
     useFormField: () => ({
       id: 'test-id',
       name: 'test-name',

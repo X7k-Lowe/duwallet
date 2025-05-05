@@ -11,7 +11,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <body>
-        {/* @ts-expect-error React.ReactNodeの型の不一致を無視 */}
         <main>{children}</main>
       </body>
     </html>

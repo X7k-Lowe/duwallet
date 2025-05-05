@@ -1,24 +1,28 @@
-import React from 'react';
+'use client';
 
-export default function Home() {
+import { useRouter } from 'next/navigation';
+import { AuthStateChecker } from '@/components/auth/AuthStateChecker';
+import { Logo } from '@/components/ui/Logo';
+
+export default function SplashPage() {
+  const router = useRouter();
+
+  const handleAuthenticated = () => {
+    router.replace('/books'); // Use replace to avoid adding splash to history
+  };
+
+  const handleUnauthenticated = () => {
+    router.replace('/login'); // Use replace
+  };
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="mb-6 text-4xl font-bold">DUWallet</h1>
-      <p className="mb-8 text-xl">複数ユーザーが共同で管理する家計簿アプリ</p>
-      <div className="space-x-4">
-        <a
-          href="/login"
-          className="rounded-md bg-primary px-6 py-2 text-white transition-colors hover:bg-primary-dark"
-        >
-          ログイン
-        </a>
-        <a
-          href="/signup"
-          className="rounded-md border border-primary px-6 py-2 text-primary transition-colors hover:bg-gray-50"
-        >
-          アカウント作成
-        </a>
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      <Logo />
+      <p className="mt-4 text-muted-foreground">読み込み中...</p>
+      <AuthStateChecker
+        onAuthenticated={handleAuthenticated}
+        onUnauthenticated={handleUnauthenticated}
+      />
     </div>
   );
 }
