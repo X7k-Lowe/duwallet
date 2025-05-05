@@ -6,9 +6,9 @@
 
 ### 要件
 
-- Node.js 18.0.0以上
-- pnpm 8.0.0以上
-- Docker Compose
+- Node.js >=18.0.0
+- pnpm >=8.0.0
+- Docker Compose >=2.0
 
 ### セットアップ
 
@@ -55,9 +55,9 @@ pnpm playwright test --reporter=line
 
 ## 技術スタック
 
-- フロントエンド: Next.js 14, TypeScript, TailwindCSS, shadcn/ui
+- フロントエンド: Next.js 14, TypeScript 5, TailwindCSS, shadcn/ui
 - 状態管理: Zustand, TanStack Query
-- バックエンド: Supabase (PostgreSQL, Auth, Storage)
+- バックエンド: Supabase@^1.0 (PostgreSQL 15, Auth, Storage)
 - テスト: Jest, React Testing Library, Playwright
 
 ## 1. プロダクト概要
@@ -95,21 +95,31 @@ graph TD
 
 ## 3. 技術スタック（決定版）
 
-| 層                  | 採用技術                                                             | 主な役割                     | 採用理由                                         |
-| ------------------- | -------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------ |
-| フロントエンド      | **Next.js 14 (App Router)**, **React 18**, **TypeScript**            | SPA/PWA                      | ファイルルーティング + SSG/ISR、Vercel との相性  |
-| UI / スタイリング   | **Tailwind CSS 3**, **shadcn/ui**, **class-variance-authority**      | デザインシステム             | 最小 CSS、コンポーネントのカスタマイズ性         |
-| 状態管理            | **TanStack Query**, **Zustand**                                      | API キャッシュ / UI 状態     | データ取得の最適化とシンプルなグローバルステート |
-| バリデーション      | **React Hook Form + Zod**                                            | フォーム & 型安全            | 型定義とスキーマを共有                           |
-| 日付操作            | **date-fns**                                                         | ローカライズ対応             | 軽量、tree-shakable                              |
-| 通貨/単位           | **Intl.NumberFormat (¥)**                                            | 金額表示                     | 日本円専用で実装                                 |
-| PWA                 | **next-pwa**                                                         | キャッシュ戦略／オフライン   | 設定が簡易で iOS 対応実績あり                    |
-| 認証 / データベース | **Supabase (PostgreSQL + Auth + Storage + Realtime)**                | BaaS                         | 無料枠が広く、RLS による高いセキュリティ         |
-| サーバーロジック    | **Supabase Edge Functions (TypeScript)**                             | ビジネスロジック             | 無料・Deno 実行環境、低レイテンシ                |
-| CI / CD             | **GitHub Actions**, **Vercel**, **Supabase CLI**                     | テスト／自動デプロイ         | OSS かつ無料枠で完結                             |
-| テスト              | **Jest**, **@testing-library/react**, **Playwright**                 | 単体／結合／E2E              | PWA シナリオも網羅                               |
-| 品質ツール          | **ESLint**, **Prettier**, **Husky**, **lint-staged**, **commitlint** | コードスタイル統一           | DX 向上                                          |
-| 開発環境            | **Docker Compose**                                                   | ローカル DB & Edge Functions | Windows でも環境差分無し                         |
+| 層                   | 採用技術                                                                | 主な役割                     | 採用理由                                         |
+| -------------------- | ----------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------ |
+| フロントエンド       | **Next.js 14 (App Router)**, **React 18**, **TypeScript 5**             | SPA/PWA                      | ファイルルーティング + SSG/ISR、Vercel との相性  |
+| UI / スタイリング    | **Tailwind CSS 3**, **shadcn/ui**, **class-variance-authority ^0.7.1**  | デザインシステム             | 最小 CSS、コンポーネントのカスタマイズ性         |
+|                      | **clsx ^2.0.0**, **tailwind-merge ^2.1.0**, **tailwindcss-animate**     | ユーティリティ               | クラス結合・アニメーション                       |
+|                      | **lucide-react ^0.507.0**, **radix-ui/react-components**                | アイコン・アクセシブルUI     | モダンで一貫したUIコンポーネント                 |
+| 状態管理             | **TanStack Query ^5.13.4**, **Zustand ^4.4.7**                          | API キャッシュ / UI 状態     | データ取得の最適化とシンプルなグローバルステート |
+| バリデーション       | **React Hook Form ^7.56.2** + **Zod ^3.24.4**                           | フォーム & 型安全            | 型定義とスキーマを共有                           |
+|                      | **@hookform/resolvers ^5.0.1**                                          | スキーマ検証                 | フォームとZodの連携                              |
+| 日付操作             | **date-fns ^2.30.0**                                                    | ローカライズ対応             | 軽量、tree-shakable                              |
+| 通貨/単位            | **Intl.NumberFormat (¥)**                                               | 金額表示                     | 日本円専用で実装                                 |
+| 国際化               | **なし** (日本語固定)                                                   | 言語対応                     | 対象ユーザーが日本人のみのため                   |
+| PWA                  | **next-pwa ^5.6.0** (Workbox)                                           | キャッシュ戦略／オフライン   | 設定が簡易で iOS 対応実績あり                    |
+| 認証 / データベース  | **Supabase@^1.0** (PostgreSQL 15 + Auth + Storage + Realtime)           | BaaS                         | 無料枠が広く、RLS による高いセキュリティ         |
+| Supabaseクライアント | **supabase-js ^2.39.0**, **auth-helpers-nextjs ^0.8.7**, **ssr ^0.6.1** | APIアクセス                  | Supabase公式クライアント                         |
+| 認証方式             | **Supabase Auth** (Email, OTP, OAuth)                                   | ユーザー認証                 | 複数認証方式の統合管理が容易                     |
+| サーバーロジック     | **Supabase Edge Functions** (Deno + TypeScript)                         | ビジネスロジック             | 無料・Deno 実行環境、低レイテンシ                |
+| CI / CD              | **GitHub Actions**, **Vercel**, **Supabase CLI**                        | テスト／自動デプロイ         | OSS かつ無料枠で完結                             |
+| ホスティング         | **Vercel Hobby Plan**                                                   | デプロイ先                   | 無料枠、CI/CD統合、高パフォーマンス              |
+| テスト               | **Jest ^29.7.0**, **@testing-library/react ^14.1.2**                    | 単体／結合                   | React向け標準テストライブラリ                    |
+|                      | **Playwright ^1.52.0** (chromium, webkit, firefox)                      | E2E                          | PWA シナリオも網羅                               |
+| 品質ツール           | **ESLint ^8.55.0**, **Prettier ^3.5.3**                                 | コードスタイル統一           | DX 向上                                          |
+|                      | **Husky ^8.0.3**, **lint-staged ^15.2.0**, **commitlint ^18.4.3**       | Git フック                   | コミット前品質確保                               |
+| 開発環境             | **Docker Compose >=2.0**                                                | ローカル DB & Edge Functions | Windows でも環境差分無し                         |
+| モノレポ構成         | **pnpm workspaces**                                                     | パッケージ管理               | 複数パッケージの効率的管理                       |
 
 > 💰 **コスト試算**: フロント (Vercel Hobby)、バックエンド (Supabase Free) で月額 $0 運用が可能。
 
