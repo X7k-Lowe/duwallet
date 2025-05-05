@@ -1,8 +1,6 @@
-// @ts-nocheck
-import clsx from 'clsx';
+// @ts-nocheck - tailwindマージユーティリティのため
+import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-
-type ClassValue = string | number | ClassValue[] | Record<string, any> | undefined | null | false;
 
 /**
  * クラス名を結合するユーティリティ

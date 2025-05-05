@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { PlaywrightTestConfig } from '@playwright/test';
+// @ts-nocheck - Playwrightの設定ファイルのため
+import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: '../../e2e',

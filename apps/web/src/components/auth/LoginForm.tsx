@@ -4,9 +4,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { createClient } from '@/utils/supabase/client'; // Import Supabase client
+import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Form,
   FormControl,
   FormField,
@@ -29,7 +30,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
-  const supabase = createClient(); // Initialize Supabase client
+  const supabase = createClient();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,7 +47,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
       });
 
       if (error) {
-        onError(error.message); // Use actual error message
+        onError(error.message);
       } else {
         onSuccess();
       }
@@ -57,7 +58,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full max-w-sm">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-sm space-y-8">
       <FormField
         control={form.control}
         name="email"

@@ -8,10 +8,7 @@ interface AuthStateCheckerProps {
   onUnauthenticated: () => void;
 }
 
-export const AuthStateChecker = ({
-  onAuthenticated,
-  onUnauthenticated,
-}: AuthStateCheckerProps) => {
+export const AuthStateChecker = ({ onAuthenticated, onUnauthenticated }: AuthStateCheckerProps) => {
   useEffect(() => {
     const supabase = createClient(); // Initialize Supabase client
 

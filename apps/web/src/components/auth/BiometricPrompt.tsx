@@ -9,7 +9,8 @@ interface BiometricPromptProps {
 }
 
 export const BiometricPrompt = ({ onSuccess, onCancel }: BiometricPromptProps) => {
-  const handleBiometricAuth = async () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleBiometricAuth = async (onSuccess: () => void) => {
     console.log('Biometric auth attempt - Not implemented yet');
     // TODO: Implement WebAuthn or Credential API logic
     // Potentially call onSuccess or onCancel based on the result
@@ -18,8 +19,8 @@ export const BiometricPrompt = ({ onSuccess, onCancel }: BiometricPromptProps) =
 
   return (
     <div className="mt-4 text-center">
-      <p className="text-sm text-muted-foreground mb-2">または</p>
-      <Button variant="outline" onClick={handleBiometricAuth}>
+      <p className="mb-2 text-sm text-muted-foreground">または</p>
+      <Button variant="outline" onClick={() => handleBiometricAuth(onSuccess)}>
         生体認証でログイン
       </Button>
     </div>

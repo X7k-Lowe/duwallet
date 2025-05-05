@@ -20,7 +20,7 @@ declare global {
   function afterEach(fn: () => void): void;
   function beforeAll(fn: () => void): void;
   function afterAll(fn: () => void): void;
-  
+
   namespace jest {
     function fn<T = any>(): jest.Mock<T>;
     function mock(moduleName: string, factory?: any): void;
