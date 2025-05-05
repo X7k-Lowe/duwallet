@@ -1,4 +1,4 @@
-# DUWallet - 共同家計簿アプリ
+# DUWALLET - 共同家計簿アプリ
 
 複数ユーザーが共同で管理する家計簿をスマートフォン中心に利用するPWAです。収入割合方式または残金均一方式で月次支払額を自動算出し、支払先・支払期限も含めて可視化します。
 
@@ -6,9 +6,9 @@
 
 ### 要件
 
-- Node.js 18.0.0以上
-- pnpm 8.0.0以上
-- Docker Compose
+- Node.js >=18.0.0
+- pnpm >=8.0.0
+- Docker Compose >=2.0
 
 ### セットアップ
 
@@ -55,14 +55,14 @@ pnpm playwright test --reporter=line
 
 ## 技術スタック
 
-- フロントエンド: Next.js 14, TypeScript, TailwindCSS, shadcn/ui
+- フロントエンド: Next.js 14, TypeScript 5, TailwindCSS, shadcn/ui
 - 状態管理: Zustand, TanStack Query
-- バックエンド: Supabase (PostgreSQL, Auth, Storage)
+- バックエンド: Supabase@^1.0 (PostgreSQL 15, Auth, Storage)
 - テスト: Jest, React Testing Library, Playwright
 
 ## 1. プロダクト概要
 
-`duwallet` は複数ユーザーが共同で管理する家計簿を、収入割合や残金に応じた独自ロジックで自動割勘し、決済期限も含めて一元管理できる PWA です。主目的は夫婦 2 名での利用ですが、ユーザー数拡張やチーム利用を想定したスケーラビリティも確保します。アプリ名は *duet / duo* + *wallet* に由来します。
+`duwallet` は複数ユーザーが共同で管理する家計簿を、収入割合や残金に応じた独自ロジックで自動割勘し、決済期限も含めて一元管理できる PWA です。主目的は夫婦 2 名での利用ですが、ユーザー数拡張やチーム利用を想定したスケーラビリティも確保します。アプリ名は _duet / duo_ + _wallet_ に由来します。
 
 ## 2. アーキテクチャ概要
 
@@ -95,35 +95,45 @@ graph TD
 
 ## 3. 技術スタック（決定版）
 
-| 層                  | 採用技術                                                                                           | 主な役割                     | 採用理由                                         |
-| ------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------ |
-| フロントエンド      | **Next.js 14 (App Router)**, **React 18**, **TypeScript**                        | SPA/PWA                      | ファイルルーティング + SSG/ISR、Vercel との相性  |
-| UI / スタイリング   | **Tailwind CSS 3**, **shadcn/ui**, **class-variance-authority**                  | デザインシステム             | 最小 CSS、コンポーネントのカスタマイズ性         |
-| 状態管理            | **TanStack Query**, **Zustand**                                                        | API キャッシュ / UI 状態     | データ取得の最適化とシンプルなグローバルステート |
-| バリデーション      | **React Hook Form + Zod**                                                                    | フォーム & 型安全            | 型定義とスキーマを共有                           |
-| 日付操作            | **date-fns**                                                                                 | ローカライズ対応             | 軽量、tree-shakable                              |
-| 通貨/単位           | **Intl.NumberFormat (¥)**                                                                   | 金額表示                     | 日本円専用で実装                                 |
-| PWA                 | **next-pwa**                                                                                 | キャッシュ戦略／オフライン   | 設定が簡易で iOS 対応実績あり                    |
-| 認証 / データベース | **Supabase (PostgreSQL + Auth + Storage + Realtime)**                                        | BaaS                         | 無料枠が広く、RLS による高いセキュリティ         |
-| サーバーロジック    | **Supabase Edge Functions (TypeScript)**                                                     | ビジネスロジック             | 無料・Deno 実行環境、低レイテンシ                |
-| CI / CD             | **GitHub Actions**, **Vercel**, **Supabase CLI**                                 | テスト／自動デプロイ         | OSS かつ無料枠で完結                             |
-| テスト              | **Jest**, **@testing-library/react**, **Playwright**                             | 単体／結合／E2E              | PWA シナリオも網羅                               |
-| 品質ツール          | **ESLint**, **Prettier**, **Husky**, **lint-staged**, **commitlint** | コードスタイル統一           | DX 向上                                          |
-| 開発環境            | **Docker Compose**                                                                           | ローカル DB & Edge Functions | Windows でも環境差分無し                         |
+| 層                   | 採用技術                                                                | 主な役割                     | 採用理由                                         |
+| -------------------- | ----------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------ |
+| フロントエンド       | **Next.js 14 (App Router)**, **React 18**, **TypeScript 5**             | SPA/PWA                      | ファイルルーティング + SSG/ISR、Vercel との相性  |
+| UI / スタイリング    | **Tailwind CSS 3**, **shadcn/ui**, **class-variance-authority ^0.7.1**  | デザインシステム             | 最小 CSS、コンポーネントのカスタマイズ性         |
+|                      | **clsx ^2.0.0**, **tailwind-merge ^2.1.0**, **tailwindcss-animate**     | ユーティリティ               | クラス結合・アニメーション                       |
+|                      | **lucide-react ^0.507.0**, **radix-ui/react-components**                | アイコン・アクセシブルUI     | モダンで一貫したUIコンポーネント                 |
+| 状態管理             | **TanStack Query ^5.13.4**, **Zustand ^4.4.7**                          | API キャッシュ / UI 状態     | データ取得の最適化とシンプルなグローバルステート |
+| バリデーション       | **React Hook Form ^7.56.2** + **Zod ^3.24.4**                           | フォーム & 型安全            | 型定義とスキーマを共有                           |
+|                      | **@hookform/resolvers ^5.0.1**                                          | スキーマ検証                 | フォームとZodの連携                              |
+| 日付操作             | **date-fns ^2.30.0**                                                    | ローカライズ対応             | 軽量、tree-shakable                              |
+| 通貨/単位            | **Intl.NumberFormat (¥)**                                               | 金額表示                     | 日本円専用で実装                                 |
+| 国際化               | **なし** (日本語固定)                                                   | 言語対応                     | 対象ユーザーが日本人のみのため                   |
+| PWA                  | **next-pwa ^5.6.0** (Workbox)                                           | キャッシュ戦略／オフライン   | 設定が簡易で iOS 対応実績あり                    |
+| 認証 / データベース  | **Supabase@^1.0** (PostgreSQL 15 + Auth + Storage + Realtime)           | BaaS                         | 無料枠が広く、RLS による高いセキュリティ         |
+| Supabaseクライアント | **supabase-js ^2.39.0**, **auth-helpers-nextjs ^0.8.7**, **ssr ^0.6.1** | APIアクセス                  | Supabase公式クライアント                         |
+| 認証方式             | **Supabase Auth** (Email, OTP, OAuth)                                   | ユーザー認証                 | 複数認証方式の統合管理が容易                     |
+| サーバーロジック     | **Supabase Edge Functions** (Deno + TypeScript)                         | ビジネスロジック             | 無料・Deno 実行環境、低レイテンシ                |
+| CI / CD              | **GitHub Actions**, **Vercel**, **Supabase CLI**                        | テスト／自動デプロイ         | OSS かつ無料枠で完結                             |
+| ホスティング         | **Vercel Hobby Plan**                                                   | デプロイ先                   | 無料枠、CI/CD統合、高パフォーマンス              |
+| テスト               | **Jest ^29.7.0**, **@testing-library/react ^14.1.2**                    | 単体／結合                   | React向け標準テストライブラリ                    |
+|                      | **Playwright ^1.52.0** (chromium, webkit, firefox)                      | E2E                          | PWA シナリオも網羅                               |
+| 品質ツール           | **ESLint ^8.55.0**, **Prettier ^3.5.3**                                 | コードスタイル統一           | DX 向上                                          |
+|                      | **Husky ^8.0.3**, **lint-staged ^15.2.0**, **commitlint ^18.4.3**       | Git フック                   | コミット前品質確保                               |
+| 開発環境             | **Docker Compose >=2.0**                                                | ローカル DB & Edge Functions | Windows でも環境差分無し                         |
+| モノレポ構成         | **pnpm workspaces**                                                     | パッケージ管理               | 複数パッケージの効率的管理                       |
 
 > 💰 **コスト試算**: フロント (Vercel Hobby)、バックエンド (Supabase Free) で月額 $0 運用が可能。
 
 ## 4. 非機能要件
 
-| 分類             | 指標               | 目標値                        |
-| ---------------- | ------------------ | ----------------------------- |
+| 分類             | 指標               | 目標値                       |
+| ---------------- | ------------------ | ---------------------------- |
 | パフォーマンス   | LCP                | ≤ 2.5 s (3G 回線)            |
 | レイテンシ       | API 往復           | ≤ 150 ms (99 パーセンタイル) |
-| オフライン       | キャッシュ保持期間 | 12 ヶ月分のトランザクション   |
-| セキュリティ     | RLS 適用率         | 100 %                         |
-| アクセシビリティ | WCAG               | 2.1 AA 準拠                   |
-| 可用性           | フロント SLA       | 99.9 % (Vercel)               |
-| 保守性           | API カバレッジ     | 単体テスト 90 % + E2E 30 %    |
+| オフライン       | キャッシュ保持期間 | 12 ヶ月分のトランザクション  |
+| セキュリティ     | RLS 適用率         | 100 %                        |
+| アクセシビリティ | WCAG               | 2.1 AA 準拠                  |
+| 可用性           | フロント SLA       | 99.9 % (Vercel)              |
+| 保守性           | API カバレッジ     | 単体テスト 90 % + E2E 30 %   |
 
 ## 5. 辛口レビュー & 添削ポイント（旧基本設計へのフィードバック）
 
@@ -203,17 +213,17 @@ classDiagram
 
 ### 6.3 算出ロジック & 変数定義
 
-| 変数             | 意味                              | 出典                       |
-| ---------------- | --------------------------------- | -------------------------- |
-| `userIncome`   | 対象ユーザーの月次収入合計        | 月次収支テーブル `Entry` |
-| `totalIncome`  | 全参加ユーザー月次収入合計        | 同上                       |
-| `sharedIncome` | 共通収入額                        | 同上                       |
-| `userExpense`  | 対象ユーザー月次支出合計          | 同上                       |
-| `totalExpense` | 全参加ユーザー月次支出合計        | 同上                       |
-| `memberCount`  | 家計簿参加ユーザー数              | `BookUser`               |
-| `totalDue`     | 月次支払総額（支払先合算）        | `Payee` / 算出設定       |
-| `roundDigit`   | 切上げ桁 (10^n)                   | 算出設定 `CalcSetting`   |
-| `incomeSource` | 収入参照先 (`prev` or `curr`) | 設定画面でユーザーが選択   |
+| 変数           | 意味                          | 出典                     |
+| -------------- | ----------------------------- | ------------------------ |
+| `userIncome`   | 対象ユーザーの月次収入合計    | 月次収支テーブル `Entry` |
+| `totalIncome`  | 全参加ユーザー月次収入合計    | 同上                     |
+| `sharedIncome` | 共通収入額                    | 同上                     |
+| `userExpense`  | 対象ユーザー月次支出合計      | 同上                     |
+| `totalExpense` | 全参加ユーザー月次支出合計    | 同上                     |
+| `memberCount`  | 家計簿参加ユーザー数          | `BookUser`               |
+| `totalDue`     | 月次支払総額（支払先合算）    | `Payee` / 算出設定       |
+| `roundDigit`   | 切上げ桁 (10^n)               | 算出設定 `CalcSetting`   |
+| `incomeSource` | 収入参照先 (`prev` or `curr`) | 設定画面でユーザーが選択 |
 
 1. **収入割合方式** `payable = totalDue * (userIncome / (totalIncome - sharedIncome))`
 2. **残金均一方式** `payable = userIncome - ((totalIncome - totalExpense) / memberCount)`
@@ -250,7 +260,7 @@ stateDiagram
 
 ## 7. 実装方針（AI エージェント運用）
 
-1. **docs/specs** 配下に YAML 形式で *仕様・詳細設計・テックスタック・ディレクトリ構成・DB 定義・テスト計画* を分離保存する。
+1. **docs/specs** 配下に YAML 形式で _仕様・詳細設計・テックスタック・ディレクトリ構成・DB 定義・テスト計画_ を分離保存する。
 2. タスクは **docs/tasks/pending** に粒度最小で配置し、完了後 **docs/tasks/done** へ移動。
 3. 依存関係は `task_manager.yaml` で DAG 管理し、直列／並列を明示。
 4. 各セッション開始時に AI エージェントは必ず上記 YAML をパースし、矛盾が無いか検証する。

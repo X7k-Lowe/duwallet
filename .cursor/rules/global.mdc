@@ -5,41 +5,79 @@ alwaysApply: true
 ---
 Rule Name: global
 Description: |
-  # duwallet 開発運用ルール（AI エージェント用）
+  ## duwallet 開発運用ルール（AI エージェント用）
+  本プロジェクトでは **AI エージェント** が実装・テスト・ドキュメント更新を担当します。
+  下記ガイドラインを *厳守* してください。
 
-  本プロジェクトでは AI エージェントが実装・テスト・ドキュメント更新を行う。
-  エージェントは以下のルールを厳守すること。
+  ### 1. YAML ドキュメント同期
+  - docs/specs 配下の YAML (**spec.yaml**, **detailed_design.yaml**, **tech_stack.yaml**, **directory.yaml**, **database_schema.yaml**, **test_plan.yaml**, **ui_components.yaml**, **api_contract.yaml**, **calc_logic.yaml**, **rls_policy.yaml**, **env_vars.yaml**, **edge_functions.yaml**) を **毎セッション** 解析し、内容の矛盾が無いことを確認してからタスクを実行すること。
 
-  1. **YAML ドキュメント参照の義務**  
-     docs/specs 配下の YAML (*仕様* `spec.yaml`, *詳細設計* `detailed_design.yaml`, *技術スタック* `tech_stack.yaml`, *ディレクトリ構成* `directory.yaml`, *DB 定義* `database_schema.yaml`, *テスト計画* `test_plan.yaml`, *UI コンポーネント* `ui_components.yaml`, *API 契約* `api_contract.yaml`, *算出ロジック* `calc_logic.yaml`, *RLS ポリシー* `rls_policy.yaml`, *環境変数* `env_vars.yaml`, *Edge Functions* `edge_functions.yaml`) を毎セッション必ずパースし、矛盾が無いことを確認してからタスクを実行する。
-  2. **タスク管理フロー**  
-     - 未着手タスクは `docs/tasks/pending/*.yaml` に粒度最小で格納すること。  
-     - 完了したタスクファイルは `docs/tasks/done/` へ移動し、`task_manager.yaml` のステータスを `done` に更新すること。  
-     - `task_manager.yaml` は DAG 形式でタスク依存関係（直列 / 並列）を明示すること。
-  3. **実装ポリシー**  
-     - コード生成時は YAML に基づき *ハルシネーションゼロ*・*省略禁止* を遵守する。  
-     - 変更差分は Pull Request で提示し、README や docs に反映漏れが無いかレビューすること。  
-     - ローカル / CI 共に `pnpm test && playwright test --reporter=line` がグリーンになるまでタスクは未完了とみなす。
-  4. **コミット規約**  
-     Conventional Commits を採用し、`type(scope): subject` 形式でメッセージを作成すること。  
-     プレコミットで ESLint, Prettier を自動修正し、lint-staged で対象ファイルを限定すること。
-  5. **セキュリティ & RLS**  
-     Supabase Row Level Security ポリシーを DB 定義 YAML に記述し、変更時は必ずマイグレーション SQL を生成・適用・テストすること。
-  6. **ドキュメント更新自動化**  
-     Mermaid 図や UML は `docs/diagrams` にソース (`*.mmd`, `*.plantuml`) を置き、`npm run docs:build` で PNG/SVG を生成すること。README 修正時はビルド済みアセットも更新すること。
-  7. **環境再現性**  
-     `docker compose up -d supabase` でローカルバックエンドが即起動するよう `docker-compose.yml` と `.env.example` を管理すること。
-  8. **秘密情報の取扱い**  
-     `.env` に機密を置き、Git に含めない。Supabase anon/public キーも再生成可能なため公開可だが write キーは厳禁。
-  9. **セッション開始マクロ**  
-     新規ターミナルセッションでは最初に `bind 'set enable-bracketed-paste off'` を実行し、`[200~` プレフィクス問題を回避すること。
- 10. **言語ポリシー**  
-     AI からの自然言語レスポンスは原則として **日本語** で行い、コード・コマンド・識別子は英語キャメルケースを使用すること。
- 11. **スペック同期義務**  
-     新しいファイル・ディレクトリ・技術スタックを導入した場合、または既存仕様へ影響する変更を加えた場合は、必ず対応する YAML (tech_stack.yaml, directory.yaml など) と README を即時更新し、コミットに含めること。
- 12. **ブランチ管理ポリシー**  
-     `docs/tasks/pending/*.yaml` のタスクを実行する場合は、必ず事前に新しいブランチを作成すること。ブランチ名は `feature/T-XX-task-name` の形式で、XX はタスク番号、task-name はタスク名を英語の小文字とハイフンで表現したものとする。例: `feature/T-01-setup-environment`、`feature/T-02-configure-ci`.
- 13. **エラー確認と入力精度**  
-     - 修正後はエラーがなくなるまでコマンド等で確認し、エラーが解消されるまで試行を継続すること。
-     - エラーがなくなった時点でタスク完了と判断し、完了報告を行うこと。
-     - コマンド実行時に先頭文字が欠落する問題（例: `git` が `it` になる）が発生した場合は、正確なコマンドが入力されるまで繰り返すこと。
+  ### 2. タスク管理フロー
+  - 未着手タスクは `docs/tasks/pending/*.yaml` に *最小粒度* で格納する。
+  - 完了後はファイルを `docs/tasks/done/` へ移動し、`task_manager.yaml` のステータスを `done` へ更新する。
+  - `task_manager.yaml` は **DAG 形式** でタスク依存関係（直列 / 並列）を明示する。
+
+  ### 3. 実装ポリシー
+  - コード生成時は YAML をソースオブトゥルースとし、**ハルシネーションゼロ**・**省略禁止** を徹底する。
+  - 変更差分は Pull Request で提示し、README / docs へ反映漏れが無いかレビューを行う。
+  - ローカル・CI の両方で `pnpm lint && pnpm test && pnpm playwright test --reporter=line` がグリーンになるまでタスクは **未完了** とみなす。
+  - `.eslintrc.json` に定義されたESLintルールに厳密に従ってコードを実装する：
+    - TypeScriptの型安全性を保ち、`any`型は極力使用しない
+    - 未使用変数は削除する
+    - Reactフックのルールを遵守する
+    - Tailwind CSSのクラス名ルールに従う
+    - Prettierによるコード整形ルールに準拠する
+
+  ### 4. コミット規約
+  - **Conventional Commits** を採用し、`type(scope): subject` 形式でメッセージを作成する。
+    - **主なタイプ(type)の例**:
+      - `feat`: 新機能の追加
+      - `fix`: バグ修正
+      - `docs`: ドキュメント更新
+      - `style`: コードスタイル変更（機能に影響なし）
+      - `refactor`: リファクタリング（機能に影響なし）
+      - `test`: テスト追加・修正
+      - `chore`: ビルドプロセスや補助ツールの変更
+      - `perf`: パフォーマンス改善
+      - `ci`: CI設定ファイルとスクリプトの変更
+      - `build`: ビルドシステムや外部依存関係の変更
+    - **scope**: 変更対象のコンポーネントや機能（例: `auth`, `ui`, `api`）
+    - **subject**: 変更内容の簡潔な説明（命令形で）
+  - Pre-commit で **ESLint**, **Prettier** を自動修正し、lint-staged で対象ファイルを限定。
+  - **コミット前チェック必須**:
+    1. TypeScript, ESLint, CSS などのエラー、コンパイルエラーなどを全て解消する。
+    2. 修正後はエラーが **完全に無くなる** までコマンド等で確認し、解消されるまで試行を継続。
+    3. `pnpm lint && pnpm test && pnpm playwright test --reporter=line` を通過する。
+    4. 失敗した場合は修正→再実行を繰り返す。
+  - `--no-verify` でのスキップは禁止。
+
+  ### 5. セキュリティ & RLS
+  - Supabase **Row Level Security** は `database_schema.yaml` へ記述。
+  - 変更時はマイグレーション SQL を生成・適用・テストすること。
+
+  ### 6. ドキュメント更新自動化
+  - Mermaid / PlantUML ソースは `docs/diagrams` に置き、`npm run docs:build` で PNG/SVG を生成。
+  - README 変更時はビルド済みアセットも更新する。
+
+  ### 7. 環境再現性
+  - `docker compose up -d supabase` でローカルバックエンドが即起動できるよう、`docker-compose.yml` と `.env.example` を管理する。
+
+  ### 8. 秘密情報の取扱い
+  - 秘密情報は `.env` に保存し Git には含めない。
+  - Supabase *anon/public キー* は公開可だが、*write/service_role キー* は厳禁。
+
+  ### 9. セッション開始マクロ
+  - 新規ターミナルでは最初に `bind 'set enable-bracketed-paste off'` を実行し、`[200~` プレフィクス問題を回避。
+
+  ### 10. 言語ポリシー
+  - 自然言語レスポンスは **日本語**、コード・コマンド・識別子は **英語 CamelCase**。
+
+  ### 11. スペック同期義務
+  - 新規ファイル／ディレクトリ／技術スタック導入や既存仕様に変更がある場合は、対応する YAML (例: **tech_stack.yaml**, **directory.yaml**) と README を即時更新し、コミットに含めること。
+
+  ### 12. ブランチ管理ポリシー
+  - タスク着手前に `feature/T-XX-task-name` 形式でブランチを作成。`XX` はタスク番号、`task-name` は英小文字ハイフン区切り。
+    - 例: `feature/T-01-setup-environment`, `feature/T-02-configure-ci`
+
+  ### 13. ターミナルツール入力精度
+  - コマンド入力時に先頭文字が欠落する問題（例: `git` → `it`）が発生した場合、正確なコマンドが入力されるまで再実行する。
