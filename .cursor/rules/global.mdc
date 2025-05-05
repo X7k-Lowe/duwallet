@@ -11,7 +11,7 @@ Description: |
   エージェントは以下のルールを厳守すること。
 
   1. **YAML ドキュメント参照の義務**  
-     docs/specs 配下の YAML (*仕様* `spec.yaml`, *詳細設計* `detailed_design.yaml`, *技術スタック* `tech_stack.yaml`, *ディレクトリ構成* `directory.yaml`, *DB 定義* `database_schema.yaml`, *テスト計画* `test_plan.yaml`) を毎セッション必ずパースし、矛盾が無いことを確認してからタスクを実行する。
+     docs/specs 配下の YAML (*仕様* `spec.yaml`, *詳細設計* `detailed_design.yaml`, *技術スタック* `tech_stack.yaml`, *ディレクトリ構成* `directory.yaml`, *DB 定義* `database_schema.yaml`, *テスト計画* `test_plan.yaml`, *UI コンポーネント* `ui_components.yaml`, *API 契約* `api_contract.yaml`, *算出ロジック* `calc_logic.yaml`, *RLS ポリシー* `rls_policy.yaml`, *環境変数* `env_vars.yaml`, *Edge Functions* `edge_functions.yaml`) を毎セッション必ずパースし、矛盾が無いことを確認してからタスクを実行する。
   2. **タスク管理フロー**  
      - 未着手タスクは `docs/tasks/pending/*.yaml` に粒度最小で格納すること。  
      - 完了したタスクファイルは `docs/tasks/done/` へ移動し、`task_manager.yaml` のステータスを `done` に更新すること。  

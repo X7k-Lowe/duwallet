@@ -1,0 +1,135 @@
+# ユーザーインターフェースの原子‐分子‐有機的コンポーネント定義
+# 各 `props` フィールドは TypeScript 型を簡易表記で記す
+
+components:
+  Logo:
+    description: アプリロゴおよびブランドテキスト
+    props: {}
+  AuthStateChecker:
+    description: Supabase Auth 状態を監視し、リダイレクトを制御
+    props:
+      onAuthenticated: "() => void"
+      onUnauthenticated: "() => void"
+  LoginForm:
+    description: Email / Password ログインフォーム（RHF + Zod）
+    props:
+      onSuccess: "() => void"
+      onError: "(message: string) => void"
+  BiometricPrompt:
+    description: 端末の WebAuthn / Credential API を呼び出す生体認証 UI
+    props:
+      onSuccess: "() => void"
+      onCancel: "() => void"
+  SignupForm:
+    description: 新規登録フォーム（メール + パスワード）
+    props:
+      onSuccess: "() => void"
+      onError: "(message: string) => void"
+  BookList:
+    description: 参加中 Book 一覧。Skeleton／エンプティステート含む
+    props:
+      books: "Book[]"
+      onSelect: "(bookId: string) => void"
+  JoinByCodeModal:
+    description: 招待コード入力モーダル
+    props:
+      open: "boolean"
+      onClose: "() => void"
+      onSubmit: "(code: string) => Promise<void>"
+  CreateBookButton:
+    description: BookCreate 画面への遷移ボタン (FAB)
+    props:
+      onClick: "() => void"
+  BookCreateForm:
+    description: 家計簿作成フォーム
+    props:
+      onSubmit: "(payload: { name: string; inviteCode?: string }) => Promise<void>"
+  SummaryHeader:
+    description: 対象月・総収支を表示するヘッダー
+    props:
+      month: "string" # yyyy-MM
+      balance: "number"
+  MonthlyTotals:
+    description: 収入・支出・支払額サマリカード集合
+    props:
+      entries: "EntrySummary[]" # per user
+  NavigationDrawer:
+    description: ハンバーガー / ドロワーメニュー
+    props:
+      open: "boolean"
+      onNavigate: "(path: string) => void"
+      onClose: "() => void"
+  EntryForm:
+    description: 月次収支入力フォーム
+    props:
+      defaultValues: "Partial<Entry>"
+      onSubmit: "(values: EntryInput) => Promise<void>"
+  EntryTable:
+    description: 既存収支一覧
+    props:
+      entries: "Entry[]"
+      onEdit: "(id: string) => void"
+      onDelete: "(id: string) => void"
+  PayeeForm:
+    description: 支払先 CRUD フォーム
+    props:
+      defaultValues: "Partial<Payee>"
+      onSubmit: "(values: PayeeInput) => Promise<void>"
+  PayeeTable:
+    description: 支払先テーブル
+    props:
+      payees: "Payee[]"
+      onEdit: "(id: string) => void"
+      onDelete: "(id: string) => void"
+  CalcMethodSelector:
+    description: 算出方式セレクトボックス
+    props:
+      value: "'income_ratio' | 'equal_balance'"
+      onChange: "(v: string) => void"
+  RoundDigitInput:
+    description: 切上げ桁の数値入力
+    props:
+      value: "number"
+      onChange: "(n: number) => void"
+  IncomeSourceSelector:
+    description: 前月 / 今月 収入参照先選択
+    props:
+      value: "'prev' | 'curr'"
+      onChange: "(v: string) => void"
+  RatioAdjustmentTable:
+    description: 各ユーザーの支払率補正入力テーブル
+    props:
+      ratios: "{ userId: string; ratio: number }[]"
+      onChange: "(ratios: { userId: string; ratio: number }[]) => void"
+  BookNameInput:
+    description: 家計簿名入力
+    props:
+      value: "string"
+      onChange: "(v: string) => void"
+  InviteCodeSwitch:
+    description: 参加コード自動生成の ON/OFF スイッチ
+    props:
+      auto: "boolean"
+      onToggle: "(auto: boolean) => void"
+  ReceiveRequestToggle:
+    description: 参加申請受け付け ON/OFF
+    props:
+      enabled: "boolean"
+      onToggle: "(v: boolean) => void"
+  UserRoleTable:
+    description: 参加ユーザーとロール編集テーブル
+    props:
+      members: "{ userId: string; email: string; role: 'admin'|'member'; approved: boolean }[]"
+      onRoleChange: "(userId: string, role: 'admin'|'member') => void"
+      onApprove: "(userId: string) => void"
+  JoinRequestTable:
+    description: 未承認ユーザー一覧テーブル
+    props:
+      requests: "{ userId: string; email: string }[]"
+      onApprove: "(userId: string) => void"
+      onReject: "(userId: string) => void"
+  ProfileForm:
+    description: ユーザープロフィール編集フォーム
+    props:
+      defaultValues: "Partial<User>"
+      onSubmit: "(values: UserInput) => Promise<void>" 
