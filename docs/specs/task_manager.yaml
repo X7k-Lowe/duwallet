@@ -4,6 +4,7 @@ nodes:
     status: done
   - id: T-02
     title: Configure CI / CD
+    status: done
   - id: T-03
     title: Auth Flow
   - id: T-04

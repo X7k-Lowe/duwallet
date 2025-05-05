@@ -9,6 +9,6 @@ outputs:
   - .github/workflows/ci.yml
   - .github/workflows/deploy.yml
   - .husky/pre-commit
-  - lint-staged.config.js
+  - .lintstagedrc.js
 tests: []
-status: pending 
+status: done
