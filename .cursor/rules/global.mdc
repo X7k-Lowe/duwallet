@@ -37,3 +37,5 @@ Description: |
      AI からの自然言語レスポンスは原則として **日本語** で行い、コード・コマンド・識別子は英語キャメルケースを使用すること。
  11. **スペック同期義務**  
      新しいファイル・ディレクトリ・技術スタックを導入した場合、または既存仕様へ影響する変更を加えた場合は、必ず対応する YAML (tech_stack.yaml, directory.yaml など) と README を即時更新し、コミットに含めること。
+ 12. **ブランチ管理ポリシー**  
+     `docs/tasks/pending/*.yaml` のタスクを実行する場合は、必ず事前に新しいブランチを作成すること。ブランチ名は `feature/T-XX-task-name` の形式で、XX はタスク番号、task-name はタスク名を英語の小文字とハイフンで表現したものとする。例: `feature/T-01-setup-environment`、`feature/T-02-configure-ci`.
