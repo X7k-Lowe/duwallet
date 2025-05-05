@@ -1,1 +1,7 @@
-{}
+{
+  "version": 2,
+  "framework": null,
+  "buildCommand": "cd apps/web && pnpm install && pnpm build",
+  "outputDirectory": "apps/web/.next",
+  "rewrites": [{ "source": "/(.*)", "destination": "/$1" }]
+}
