@@ -1,0 +1,17 @@
+id: T-05
+title: Entries & Payees CRUD
+description: |
+  • Implement C-02 (Entries) & C-03 (Payees) screens
+  • Components: EntryForm, EntryTable, PayeeForm, PayeeTable
+  • Supabase tables: entries, payees
+  • Unit tests: calc/payable.spec.ts, EntryForm
+  • Extend E2E02: add income/expense, add payee
+  • Ensure TanStack Query caches & optimistic updates work
+dependsOn: [T-04]
+outputs:
+  - apps/web/src/app/books/[id]/entries/page.tsx
+  - apps/web/src/app/books/[id]/payees/page.tsx
+  - tests/unit/calc/payable.spec.ts
+  - tests/component/EntryForm.test.tsx
+  - e2e/CreateBookAndEntry.spec.ts
+status: pending 

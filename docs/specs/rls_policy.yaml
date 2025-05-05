@@ -1,0 +1,47 @@
+# Row Level Security ポリシー定義
+# テーブルごとにポリシー名・定義・許可コマンドを列挙
+
+policies:
+  users:
+    - name: self_access
+      definition: user_id() = id
+      command: [SELECT, UPDATE]
+  books:
+    - name: member_read
+      definition: |
+        exists(
+          select 1 from book_users bu
+          where bu.book_id = id and bu.user_id = user_id() and bu.approved
+        )
+      command: [SELECT]
+  book_users:
+    - name: owner_insert
+      definition: user_id() = user_id
+      command: [INSERT]
+    - name: member_read
+      definition: user_id() = user_id
+      command: [SELECT]
+  entries:
+    - name: member_crud
+      definition: |
+        exists(
+          select 1 from book_users
+          where user_id = user_id() and book_id = entries.book_id and approved
+        )
+      command: [ALL]
+  payees:
+    - name: admin_crud
+      definition: |
+        exists(
+          select 1 from book_users
+          where user_id = user_id() and book_id = payees.book_id and role = 'admin'
+        )
+      command: [ALL]
+  calc_settings:
+    - name: admin_update
+      definition: |
+        exists(
+          select 1 from book_users
+          where user_id = user_id() and book_id = calc_settings.book_id and role = 'admin'
+        )
+      command: [SELECT, UPDATE] 

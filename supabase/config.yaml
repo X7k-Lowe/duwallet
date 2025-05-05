@@ -1,0 +1,30 @@
+project_id: duwallet
+# Reference: https://supabase.com/docs/guides/cli/config
+api:
+  port: 54321
+  schemas:
+    - public
+    - storage
+  extra_search_path:
+    - pg_net
+    - pg_graphql
+  extra_includes:
+    - extensions
+db:
+  port: 5432
+  shadow_port: 54320
+  major_version: 15
+studio:
+  port: 54323
+inbucket:
+  port: 54324
+  smtp_port: 54325
+  pop3_port: 54326
+storage:
+  port: 54327
+functions:
+  serve:
+    port: 54328
+    env:
+      RUNTIME: node
+    entrypoint: src/functions

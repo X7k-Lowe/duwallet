@@ -1,0 +1,22 @@
+# Supabase Edge Functions 定義
+
+functions:
+  recalc_monthly:
+    description: 月次支払額再計算
+    trigger: manual # could be cron in future
+    path: functions/recalc_monthly/index.ts
+    requestSchema:
+      type: object
+      properties:
+        bookId: { type: string, format: uuid }
+        yearMonth: { type: string, pattern: "^\\d{4}-\\d{2}$" }
+    responseSchema:
+      type: object
+      properties:
+        ok: { type: boolean }
+    timeout: 30 # seconds
+  cleanup_old_cache:
+    description: Realtime キャッシュの古い月を削除
+    trigger: cron "0 3 * * *" # UTC 3:00 every day
+    path: functions/cleanup_old_cache/index.ts
+    timeout: 60 

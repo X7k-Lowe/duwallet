@@ -1,0 +1,41 @@
+frontend:
+  framework: Next.js 14 (App Router)
+  language: TypeScript 5
+  ui:
+    - TailwindCSS 3
+    - shadcn/ui
+    - class-variance-authority
+  stateManagement:
+    global: Zustand
+    server: TanStack Query
+  forms: React Hook Form + Zod
+  pwa: next-pwa (Workbox)
+  dateLib: date-fns
+  i18n: none (日本語固定)
+  currency: "Intl.NumberFormat (JPY)"
+backend:
+  baas: Supabase@^1.0
+  db: PostgreSQL 15
+  edgeFunctions:
+    runtime: Deno
+    language: TypeScript
+  authentication: Supabase Auth (Email, OTP, OAuth)
+  storage: Supabase Storage (public bucket for receipts)
+deployment:
+  hosting: "Vercel Hobby Plan"
+  domain: "*.vercel.app (custom TBD)"
+  ciCd:
+    - "GitHub Actions (lint/test/build)"
+    - "Supabase CLI (migrations)"
+quality:
+  lint: "ESLint (eslint-config-next, @typescript-eslint)"
+  format: "Prettier"
+  hooks: "Husky + lint-staged"
+  commits: "Conventional Commits + commitlint"
+testing:
+  unit: "Jest"
+  component: "@testing-library/react"
+  e2e: "Playwright (chromium, webkit, firefox)"
+  coverage: 90% lines (unit), 30% (e2e)
+containers:
+  - Docker Compose (services: supabase, edge-runtime) 

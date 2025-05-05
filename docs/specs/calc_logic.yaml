@@ -1,0 +1,82 @@
+# 支払額算出ロジック定義
+# README 6.3 の表を YAML に構造化
+
+variables:
+  userIncome:
+    description: 対象ユーザーの月次収入合計
+    source: entries.income
+    type: number
+  totalIncome:
+    description: 全参加ユーザー月次収入合計
+    source: SUM(entries.income)
+    type: number
+  sharedIncome:
+    description: 共通収入額
+    source: entries.shared_income
+    type: number
+  userExpense:
+    description: 対象ユーザーの月次支出合計
+    source: entries.expense
+    type: number
+  totalExpense:
+    description: 全参加ユーザー月次支出合計
+    source: SUM(entries.expense)
+    type: number
+  memberCount:
+    description: 家計簿参加ユーザー数
+    source: COUNT(book_users WHERE approved)
+    type: integer
+  totalDue:
+    description: 月次支払総額 (Payee 合算)
+    source: SUM(payees.amount)
+    type: number
+  roundDigit:
+    description: 切上げ桁 (10^n)
+    source: calc_settings.round_digit
+    type: integer
+  incomeSource:
+    description: 後述の式で参照する収入月 `prev` | `curr`
+    source: calc_settings.income_source
+    type: enum
+
+formulas:
+  income_ratio:
+    description: 収入割合方式
+    expression: |
+      payable = totalDue * (userIncome / (totalIncome - sharedIncome))
+  equal_balance:
+    description: 残金均一方式
+    expression: |
+      payable = userIncome - ((totalIncome - totalExpense) / memberCount)
+  base_pay_ratio:
+    description: BasePayRatio 補正後の支払率を適用
+    expression: |
+      adjustedRatio = baseRatio[userId] # JSONB から取得
+      payable = totalDue * adjustedRatio
+  rounding:
+    description: 端数処理
+    expression: |
+      payable = ceil(payable / roundDigit) * roundDigit
+
+sequence:
+  - step: decideIncomeSource
+    detail: incomeSource が prev なら前月 entries を参照、それ以外は今月
+  - step: selectFormula
+    detail: calc_settings.method に応じて income_ratio / equal_balance を計算
+  - step: applyBaseRatioIfAny
+    detail: base_ratios JSON が存在する場合、支払率を補正
+  - step: rounding
+    detail: 端数切上げを適用し最終 payable を得る
+
+testVectors:
+  - name: simpleTwoMembers
+    input:
+      memberCount: 2
+      totalIncome: 500000
+      sharedIncome: 0
+      totalExpense: 300000
+      totalDue: 25000
+      roundDigit: 1
+      userIncome: 200000
+      method: income_ratio
+    expectedPayable: 10000 

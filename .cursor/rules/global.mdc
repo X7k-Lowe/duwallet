@@ -1,0 +1,45 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Rule Name: global
+Description: |
+  # duwallet 開発運用ルール（AI エージェント用）
+
+  本プロジェクトでは AI エージェントが実装・テスト・ドキュメント更新を行う。
+  エージェントは以下のルールを厳守すること。
+
+  1. **YAML ドキュメント参照の義務**  
+     docs/specs 配下の YAML (*仕様* `spec.yaml`, *詳細設計* `detailed_design.yaml`, *技術スタック* `tech_stack.yaml`, *ディレクトリ構成* `directory.yaml`, *DB 定義* `database_schema.yaml`, *テスト計画* `test_plan.yaml`, *UI コンポーネント* `ui_components.yaml`, *API 契約* `api_contract.yaml`, *算出ロジック* `calc_logic.yaml`, *RLS ポリシー* `rls_policy.yaml`, *環境変数* `env_vars.yaml`, *Edge Functions* `edge_functions.yaml`) を毎セッション必ずパースし、矛盾が無いことを確認してからタスクを実行する。
+  2. **タスク管理フロー**  
+     - 未着手タスクは `docs/tasks/pending/*.yaml` に粒度最小で格納すること。  
+     - 完了したタスクファイルは `docs/tasks/done/` へ移動し、`task_manager.yaml` のステータスを `done` に更新すること。  
+     - `task_manager.yaml` は DAG 形式でタスク依存関係（直列 / 並列）を明示すること。
+  3. **実装ポリシー**  
+     - コード生成時は YAML に基づき *ハルシネーションゼロ*・*省略禁止* を遵守する。  
+     - 変更差分は Pull Request で提示し、README や docs に反映漏れが無いかレビューすること。  
+     - ローカル / CI 共に `pnpm test && playwright test --reporter=line` がグリーンになるまでタスクは未完了とみなす。
+  4. **コミット規約**  
+     Conventional Commits を採用し、`type(scope): subject` 形式でメッセージを作成すること。  
+     プレコミットで ESLint, Prettier を自動修正し、lint-staged で対象ファイルを限定すること。
+  5. **セキュリティ & RLS**  
+     Supabase Row Level Security ポリシーを DB 定義 YAML に記述し、変更時は必ずマイグレーション SQL を生成・適用・テストすること。
+  6. **ドキュメント更新自動化**  
+     Mermaid 図や UML は `docs/diagrams` にソース (`*.mmd`, `*.plantuml`) を置き、`npm run docs:build` で PNG/SVG を生成すること。README 修正時はビルド済みアセットも更新すること。
+  7. **環境再現性**  
+     `docker compose up -d supabase` でローカルバックエンドが即起動するよう `docker-compose.yml` と `.env.example` を管理すること。
+  8. **秘密情報の取扱い**  
+     `.env` に機密を置き、Git に含めない。Supabase anon/public キーも再生成可能なため公開可だが write キーは厳禁。
+  9. **セッション開始マクロ**  
+     新規ターミナルセッションでは最初に `bind 'set enable-bracketed-paste off'` を実行し、`[200~` プレフィクス問題を回避すること。
+ 10. **言語ポリシー**  
+     AI からの自然言語レスポンスは原則として **日本語** で行い、コード・コマンド・識別子は英語キャメルケースを使用すること。
+ 11. **スペック同期義務**  
+     新しいファイル・ディレクトリ・技術スタックを導入した場合、または既存仕様へ影響する変更を加えた場合は、必ず対応する YAML (tech_stack.yaml, directory.yaml など) と README を即時更新し、コミットに含めること。
+ 12. **ブランチ管理ポリシー**  
+     `docs/tasks/pending/*.yaml` のタスクを実行する場合は、必ず事前に新しいブランチを作成すること。ブランチ名は `feature/T-XX-task-name` の形式で、XX はタスク番号、task-name はタスク名を英語の小文字とハイフンで表現したものとする。例: `feature/T-01-setup-environment`、`feature/T-02-configure-ci`.
+ 13. **エラー確認と入力精度**  
+     - 修正後はエラーがなくなるまでコマンド等で確認し、エラーが解消されるまで試行を継続すること。
+     - エラーがなくなった時点でタスク完了と判断し、完了報告を行うこと。
+     - コマンド実行時に先頭文字が欠落する問題（例: `git` が `it` になる）が発生した場合は、正確なコマンドが入力されるまで繰り返すこと。

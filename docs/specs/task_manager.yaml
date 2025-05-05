@@ -1,0 +1,31 @@
+nodes:
+  - id: T-01
+    title: Setup Project Environment
+    status: done
+  - id: T-02
+    title: Configure CI / CD
+    status: done
+  - id: T-03
+    title: Auth Flow
+  - id: T-04
+    title: Book CRUD
+  - id: T-05
+    title: Entries & Payees
+  - id: T-06
+    title: Calc Settings
+  - id: T-07
+    title: User Management
+edges:
+  - from: T-01
+    to: T-02
+  - from: T-01
+    to: T-03
+  - from: T-03
+    to: T-04
+  - from: T-04
+    to: T-05
+  - from: T-05
+    to: T-06
+  - from: T-04
+    to: T-07
+status: in_progress
