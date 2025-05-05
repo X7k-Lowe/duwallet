@@ -1,17 +1,14 @@
-// @ts-nocheck
+// @ts-nocheck - UIコンポーネントのスタイル処理のため
 import React from 'react';
 import { cn } from './utils/cn';
 
 // 新しいJSXトランスフォームを使用するための設定
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const jsx = React.createElement;
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export const Input = ({
-  className,
-  type,
-  ...props
-}: InputProps) => {
+export const Input = ({ className, type, ...props }: InputProps) => {
   return (
     <input
       type={type}
@@ -22,4 +19,4 @@ export const Input = ({
       {...props}
     />
   );
-}; 
+};
