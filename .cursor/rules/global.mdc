@@ -21,7 +21,7 @@ Description: |
   ### 3. 実装ポリシー
   - コード生成時は YAML をソースオブトゥルースとし、**ハルシネーションゼロ**・**省略禁止** を徹底する。
   - 変更差分は Pull Request で提示し、README / docs へ反映漏れが無いかレビューを行う。
-  - ローカル・CI の両方で `pnpm lint && pnpm test && pnpm playwright test --reporter=line` がグリーンになるまでタスクは **未完了** とみなす。
+  - ローカル・CI の両方で `pnpm lint && pnpm test && pnpm playwright test --reporter=line` がグリーンになるまで、また `pnpm build` でビルドが成功するまで、タスクは **未完了** とみなし、コミットしない。
   - `.eslintrc.json` に定義されたESLintルールに厳密に従ってコードを実装する：
     - TypeScriptの型安全性を保ち、`any`型は極力使用しない
     - 未使用変数は削除する
