@@ -1,0 +1,19 @@
+id: T-05A
+title: Entry CRUD
+description: |
+  • C-02 Entries (/books/:bookId/entries) 画面を実装。
+  • コンポーネント:
+    - EntryForm (income/expense 共用)
+    - EntryTable (TanStack Table)
+  • Supabase `entries` テーブル CRUD。
+  • 無限スクロール or pagination で lazy load。
+  • 単体テスト: EntryForm validation、ユーティリティ関数。
+  • Playwright: AddEntry シナリオ。
+dependsOn: [T-04C]
+outputs:
+  - apps/web/src/app/books/[id]/entries/page.tsx
+  - apps/web/src/components/client/EntryForm.tsx
+  - apps/web/src/components/client/EntryTable.tsx
+  - tests/component/EntryForm.test.tsx
+  - e2e/AddEntry.spec.ts
+status: pending

@@ -1,0 +1,18 @@
+id: T-07A
+title: User Management UI
+description: |
+  • C-06 UserManagement (/books/:bookId/users) 画面を実装。
+  • コンポーネント:
+    - UserRoleTable
+    - JoinRequestTable
+  • Supabase `book_users` のロール変更、join request approve API を実装 (edge functions optional)。
+  • 単体テスト: UserRoleTable 行操作。
+  • Playwright: ApproveUser シナリオ。
+dependsOn: [T-04C]
+outputs:
+  - apps/web/src/app/books/[id]/users/page.tsx
+  - apps/web/src/components/client/UserRoleTable.tsx
+  - apps/web/src/components/client/JoinRequestTable.tsx
+  - tests/component/UserRoleTable.test.tsx
+  - e2e/ApproveUser.spec.ts
+status: pending

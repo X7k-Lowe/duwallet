@@ -22,6 +22,15 @@ frontend:
   dateLib: date-fns ^2.30.0
   i18n: none (日本語固定)
   currency: 'Intl.NumberFormat (JPY)'
+  componentSeparation:
+    nextAppRouter:
+      serverDir: 'apps/web/src/app/(server)'
+      clientDir: 'apps/web/src/app/(client)'
+      rule: |
+        • デフォルトは Server Component。
+        • 'use client' を宣言するコンポーネントは必ず (client) 配下に置くこと。
+        • 共通 UI コンポーネントは packages/ui 下で 'use client' 付きの場合のみ。
+        • Server Component から直接 Client Component を import しない（Props 経由のみ許可）。
 backend:
   baas: Supabase@^1.0
   db: PostgreSQL 15

@@ -1,29 +1,35 @@
 'root':
-  'README.md': "overview & developer guide"
+  'README.md': 'overview & developer guide'
   apps:
     web:
       next.config.mjs: {}
       src:
-        app: "App Router (server & client components)"
-        components: {}
-        hooks: {}
+        app:
+          '(server)': 'App Router Server Components (default)'
+          '(client)': "App Router Client Components ('use client')"
+        components:
+          server: {}
+          client: {}
+        hooks:
+          client: {}
+          server: {}
         stores: {}
         styles: {}
   packages:
-    ui: "shared React components & Tailwind presets"
+    ui: 'shared React components & Tailwind presets'
   supabase:
-    'config.yaml': "Supabase CLI settings"
+    'config.yaml': 'Supabase CLI settings'
     migrations: {}
-    functions: "Edge Functions (TypeScript)"
+    functions: 'Edge Functions (TypeScript)'
   docs:
-    specs: "YAML 仕様一式"
-    diagrams: "Mermaid / PlantUML sources"
+    specs: 'YAML 仕様一式'
+    diagrams: 'Mermaid / PlantUML sources'
     tasks:
-      pending: "未着手タスク"
-      done: "完了タスク"
+      pending: '未着手タスク'
+      done: '完了タスク'
   '.github/workflows':
-    'ci.yml': "lint, test, build"
-    'deploy.yml': "Vercel deploy trigger"
-  scripts: "project level utilities (db seeding, etc.)"
-  'docker-compose.yml': "local supabase stack"
-  '.env.example': "env template" 
+    'ci.yml': 'lint, test, build'
+    'deploy.yml': 'Vercel deploy trigger'
+  scripts: 'project level utilities (db seeding, etc.)'
+  'docker-compose.yml': 'local supabase stack'
+  '.env.example': 'env template'
