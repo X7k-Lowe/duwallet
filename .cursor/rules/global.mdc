@@ -21,7 +21,7 @@ Description: |
   ### 3. 実装ポリシー
   - コード生成時は YAML をソースオブトゥルースとし、**ハルシネーションゼロ**・**省略禁止** を徹底する。
   - 変更差分は Pull Request で提示し、README / docs へ反映漏れが無いかレビューを行う。
-  - ローカル・CI の両方で `pnpm lint && pnpm test && pnpm playwright test --reporter=line` がグリーンになるまで、また `pnpm build` でビルドが成功するまで、タスクは **未完了** とみなし、コミットしない。
+  - ローカル・CI の両方で `pnpm lint && pnpm test && pnpm playwright test --reporter=line` がグリーンになるまで、また `pnpm store prune && pnpm install --force && pnpm build` でビルドが成功するまで、タスクは **未完了** とみなし、コミットしない。
   - `.eslintrc.json` に定義されたESLintルールに厳密に従ってコードを実装する：
     - TypeScriptの型安全性を保ち、`any`型は極力使用しない
     - 未使用変数は削除する
@@ -48,7 +48,7 @@ Description: |
   - **コミット前チェック必須**:
     1. TypeScript, ESLint, CSS などのエラー、コンパイルエラーなどを全て解消する。
     2. 修正後はエラーが **完全に無くなる** までコマンド等で確認し、解消されるまで試行を継続。
-    3. `pnpm lint && pnpm test && pnpm playwright test --reporter=line` を通過する。
+    3. `pnpm lint && pnpm test && pnpm playwright test --reporter=line && pnpm store prune && pnpm install --force && pnpm build` を通過する。
     4. 失敗した場合は修正→再実行を繰り返す。
   - `--no-verify` でのスキップは禁止。
 
