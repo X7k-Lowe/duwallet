@@ -157,4 +157,19 @@ api:
 stateManagement:
   globalStore: Zustand
   serverState: TanStackQuery
-  offlineCache: IndexedDB via next-pwa 
+  offlineCache: IndexedDB via next-pwa
+
+componentGuidelines:
+  serverComponent:
+    desc: >
+      デフォルト。useState/useEffect 等のクライアント API は利用不可。App Router により静的生成/SSR の対象となる。
+    examples: ['app/page.tsx', 'app/(server)/**']
+  clientComponent:
+    desc: >
+      ファイル先頭に "use client" を付与し、副作用・イベントハンドラを実装可能。
+    importRestriction: 'Server Component から直接 import しない (dynamic import + ssr:false を使用)'
+    examples: ['components/auth/LoginForm.tsx', 'hooks/useAuth.ts']
+  authRules:
+    - useAuth は Client Hook 専用
+    - AuthStateChecker は Client Component とし、動的 import(ssr:false) で layout に注入する
+    - 認証関連ページ (/login, /signup, /books など) は 'use client' を宣言してクライアントでレンダリング
