@@ -1,16 +1,16 @@
-# duwallet タスク管理DAG
-version: 1
-pending:
-  - id: T-01-setup-environment
-    name: 開発・CI/CD・本番環境セットアップ
-    description: duwalletの全環境を正確に構築する
-    status: pending
-    depends_on: []
-    outputs:
-      - .env.local
-      - ローカル/CI/CD/本番環境のセットアップ完了
-      - 必要なSecrets/Token/IDの登録
-    created_at: 2024-06-10T12:00:00Z
-    updated_at: 2024-06-10T12:00:00Z
-    logs: []
-done: [] 
+- id: T-01-setup-environment
+  name: 開発・CI/CD・本番環境セットアップ
+  description: duwalletの全環境を正確に構築する
+  status: done
+  depends_on: []
+  outputs:
+    - .env.local
+    - ローカル/CI/CD/本番環境のセットアップ完了
+    - 必要なSecrets/Token/IDの登録
+  created_at: 2025-05-15T00:10:00+09:00
+  updated_at: 2025-05-15T00:10:00+09:00
+  logs:
+    - 2025-05-15: 旧appのdeploy.yml/ci.ymlを現行リポジトリの.github/workflows/に移行し、CI/CD運用ルールに統合。
+    - 2025-05-15: docs/setup/Secrets_Env_Guide.mdにVERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_IDの用途・設定場所を追記。
+    - 2025-05-15: CI/CDパイプラインの動作検証を実施。
+    - 2025-05-15: T-01-setup-environmentタスク id:0〜5 完了。id:6以降（Secrets登録・CI/CD確認）進行中。
