@@ -1,0 +1,64 @@
+# Editor/IDE/OS関連
+.cursor
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Node.js/Next.js関連
+node_modules
+.next
+out
+build/
+dist/
+.cache/
+.pnpm-store
+
+# Git関連
+.git
+.gitignore
+
+# Docker関連
+Dockerfile*
+docker-compose*
+
+# ログ・一時ファイル
+*.log
+pnpm-debug.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# ドキュメント・設計資料
+*.md
+docs/
+README.md
+
+# 環境変数・Secrets
+.env*
+.envrc
+
+# テスト・カバレッジ
+coverage/
+*.lcov
+
+# PWA/Service Worker/Manifest
+public/manifest.json
+public/service-worker.js
+public/sw.js
+public/workbox-*.js
+public/*.webmanifest
+
+# Supabase関連
+.supabase/
+supabase/.temp/
+supabase/.output/
+supabase/migrations/.temp/
+supabase/.env*
+
+# その他
+oldapp/ 
