@@ -1,0 +1,67 @@
+# duwallet 環境構築タスク定義
+id: T-01-setup-environment
+name: "開発・CI/CD・本番環境セットアップ"
+description: |
+  duwalletのローカル開発・CI/CD・本番環境（Vercel, Supabase, GitHub Actions）を正確に構築するためのタスク。
+  - 前提ソフトウェアのインストール
+  - リポジトリ取得
+  - .env.localの作成とSecrets設定
+  - Supabaseローカル起動（またはdocker-composeによる一括起動）
+  - アプリ起動
+  - Vercel, GitHub Actions, Supabase本番環境のSecrets/Token/ID設定
+  - 旧appのdeploy.yml/ci.ymlから必要なSecrets名・設定も反映
+  - Windows/Mac両対応
+steps:
+  - id: 1
+    name: "前提ソフトウェアのインストール"
+    description: |
+      - Node.js 18 LTS, pnpm 8.15.4, Git 2.40+, Docker Desktop 4.27+ をインストール
+      - WindowsはPowerShellまたはGit Bash、Macはbrew推奨
+  - id: 2
+    name: "リポジトリ取得"
+    description: |
+      - git clone https://github.com/<your-account>/duwallet.git
+      - cd duwallet
+  - id: 3
+    name: ".env.localの作成とSecrets設定"
+    description: |
+      - env_template.txtを.env.localにコピー
+      - Supabaseプロジェクトから各種キー（URL, ANON_KEY, SERVICE_ROLE_KEY, JWT_SECRET）を取得し、.env.localに記載
+      - Vercel, GitHub Actions用のトークン/IDも必要に応じて設定
+      - Secrets_Env_Guide.mdを参照
+      - 旧appのdeploy.yml/ci.ymlのSecrets名（VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID）も考慮
+  - id: 4
+    name: "Supabaseローカル起動"
+    description: |
+      - supabase CLIで supabase init, supabase start
+      - もしくは docker compose -f docker-compose.dev.yaml up -d --build
+      - DB: localhost:54322, ユーザ/パス: supabase
+  - id: 5
+    name: "アプリケーション起動"
+    description: |
+      - pnpm install
+      - pnpm dev で http://localhost:3000 で起動
+      - docker-compose利用時は http://localhost:3000 でNext.js, http://localhost:54322 でDB
+  - id: 6
+    name: "CI/CD・本番環境Secrets/Token/ID設定"
+    description: |
+      - Vercel: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID をVercel管理画面で登録
+      - GitHub Actions: 必要なSecretsをGitHubリポジトリのSettings > Secretsで登録
+      - Supabase: 本番用の各種キーをVercel/CI/CDに連携
+      - 旧appのdeploy.yml/ci.ymlのSecrets名を踏襲
+  - id: 7
+    name: "CI/CDパイプライン確認"
+    description: |
+      - push/pull_request時にGitHub Actionsでpnpm lint, test, buildが自動実行されることを確認
+      - Vercelへの自動デプロイも確認
+  - id: 8
+    name: "トラブルシューティング・補足"
+    description: |
+      - よくあるエラーやTipsはdocs/setup/環境構築手順.md, Secrets_Env_Guide.md参照
+      - Windows/Macの違いにも注意
+status: pending
+dependencies: []
+outputs:
+  - .env.local
+  - ローカル/CI/CD/本番環境のセットアップ完了
+  - 必要なSecrets/Token/IDの登録 
