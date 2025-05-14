@@ -18,7 +18,7 @@
 - id: T-02-sync-project-structure
   name: プロジェクト構成・依存パッケージの設計同期
   description: docs/設計（ディレクトリ構成・技術スタック・画面仕様）と現行プロジェクトの齟齬を解消し、運用ルールに完全準拠した状態にする
-  status: pending
+  status: done
   depends_on: [T-01-setup-environment]
   outputs:
     - lib/
@@ -33,3 +33,4 @@
   updated_at: 2025-05-16T00:00:00+09:00
   logs:
     - 2025-05-16: タスク登録
+    - 2025-05-16: タスク完了・done/へ移動
