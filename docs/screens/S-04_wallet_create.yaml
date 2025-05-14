@@ -1,0 +1,95 @@
+id: S-04
+name: 家計簿作成画面
+description: 新しい家計簿を作成するための情報を入力する画面
+
+components:
+  - type: text
+    name: screenTitle
+    value: 家計簿作成
+    style: screen_title
+  
+  - type: form
+    name: createWalletForm
+    fields:
+      - type: text
+        name: walletName
+        label: 家計簿名
+        required: true
+        placeholder: 例：我が家の家計簿
+      
+      - type: radio
+        name: acceptJoinRequests
+        label: 参加申請
+        options:
+          - value: true
+            label: 参加申請を受け付ける
+          - value: false
+            label: 参加申請を受け付けない
+        default: true
+        help_text: オフにすると参加コードを知っていても申請できなくなります
+      
+      - type: group
+        name: joinCodeGroup
+        condition: acceptJoinRequests
+        fields:
+          - type: radio
+            name: joinCodeType
+            label: 参加コード生成方法
+            options:
+              - value: auto
+                label: 自動生成
+              - value: manual
+                label: 手動入力
+            default: auto
+          
+          - type: text
+            name: manualJoinCode
+            label: 参加コード
+            condition: joinCodeType == 'manual'
+            placeholder: 英数字6〜12文字
+            min_length: 6
+            max_length: 12
+      
+      - type: checkbox
+        name: confirmCreation
+        label: 自分は家計簿の管理ユーザーになります
+        required: true
+    
+    buttons:
+      - type: submit
+        name: createButton
+        label: 作成
+        action: create_wallet
+        next_screen: 家計簿ホーム画面
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        action: navigate
+        next_screen: 家計簿選択画面
+
+validation:
+  - field: walletName
+    rule: required
+    message: 家計簿名を入力してください
+  
+  - field: manualJoinCode
+    rule: pattern
+    pattern: ^[a-zA-Z0-9]{6,12}$
+    message: 参加コードは英数字6〜12文字で入力してください
+    condition: joinCodeType == 'manual'
+  
+  - field: confirmCreation
+    rule: required
+    value: true
+    message: 管理ユーザーになることを確認してください
+
+actions:
+  - name: create_wallet
+    description: 新しい家計簿を作成し、作成したユーザーに管理ユーザーロールを付与する
+    implementation: 
+      - create_wallet_record
+      - generate_join_code_if_needed
+      - assign_admin_role
+    success_redirect: 家計簿ホーム画面
+    error_action: display_error 

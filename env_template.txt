@@ -1,0 +1,20 @@
+# duwallet 環境変数テンプレート (.env.local へリネームして使用)
+
+# ===== Supabase =====
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_JWT_SECRET=
+
+# ===== アプリケーション =====
+PORT=3000
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+APP_NAME=duwallet
+
+# ===== PWA / Web Push (導入時のみ) =====
+VAPID_PUBLIC_KEY=
+VAPID_PRIVATE_KEY=
+
+# (CI/CD 用) ? 必要に応じて設定
+# VERCEL_TOKEN= 

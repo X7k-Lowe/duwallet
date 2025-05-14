@@ -1,0 +1,195 @@
+id: S-05
+name: 家計簿ホーム画面
+description: 家計簿の主要情報を表示し、各機能にアクセスするためのホーム画面
+
+auth_required: true
+wallet_membership_required: true
+
+components:
+  - type: header
+    name: walletHeader
+    fields:
+      - type: text
+        name: walletName
+        value: "{wallet_name}"
+        style: header_title
+      
+      - type: month_selector
+        name: monthSelector
+        value: "{current_month}"
+        buttons:
+          - type: button
+            name: prevMonthButton
+            label: 前月
+            action: change_month
+            params:
+              direction: prev
+          
+          - type: button
+            name: nextMonthButton
+            label: 次月
+            action: change_month
+            params:
+              direction: next
+      
+      - type: hamburger_menu
+        name: mainMenu
+        action: toggle_sidebar
+  
+  - type: sidebar
+    name: navigationSidebar
+    visible: false
+    menu_items:
+      - type: menu_item
+        name: incomeExpenseItem
+        label: 収支登録
+        icon: money
+        action: navigate
+        next_screen: 月次収支登録画面
+      
+      - type: menu_item
+        name: paymentDestinationItem
+        label: 支払先登録
+        icon: destination
+        action: navigate
+        next_screen: 支払先登録画面
+      
+      - type: menu_item
+        name: paymentCalculationItem
+        label: 支払額算出設定
+        icon: calculator
+        action: navigate
+        next_screen: 支払額算出設定画面
+      
+      - type: menu_item
+        name: basicSettingsItem
+        label: 基本設定
+        icon: settings
+        action: navigate
+        next_screen: 基本設定編集画面
+      
+      - type: menu_item
+        name: memberManagementItem
+        label: 参加ユーザー管理
+        icon: users
+        action: navigate
+        next_screen: 参加ユーザー管理画面
+      
+      - type: menu_item
+        name: userProfileItem
+        label: ユーザー設定
+        icon: user
+        action: navigate
+        next_screen: ユーザー設定画面
+        params:
+          return_screen: 家計簿ホーム画面
+  
+  - type: card
+    name: summaryCard
+    title: 今月のサマリー
+    content:
+      - type: user_summary_list
+        name: userSummaryList
+        items_source: wallet_users
+        item_template:
+          - type: user_summary_item
+            name: userSummaryItem
+            fields:
+              - type: text
+                name: userName
+                value: "{user_name}"
+                style: user_name
+              
+              - type: text
+                name: userIncome
+                value: "収入: {user_monthly_income_total}円"
+                style: money_amount
+              
+              - type: text
+                name: userExpense
+                value: "支出: {user_monthly_expense_total}円"
+                style: money_amount
+              
+              - type: text
+                name: userPaymentAmount
+                value: "支払額: {user_monthly_payment_amount}円"
+                style: money_amount_emphasis
+              
+              - type: text
+                name: userPaymentRate
+                value: "支払率: {user_payment_rate}%"
+                style: percentage
+      
+      - type: divider
+      
+      - type: common_summary
+        name: commonSummary
+        fields:
+          - type: text
+            name: commonIncome
+            value: "共通収入合計: {common_monthly_income_total}円"
+            style: money_amount
+          
+          - type: text
+            name: commonExpense
+            value: "共通支出合計: {common_monthly_expense_total}円"
+            style: money_amount
+      
+      - type: divider
+      
+      - type: total_summary
+        name: totalSummary
+        fields:
+          - type: text
+            name: totalIncome
+            value: "全体収入合計: {total_monthly_income}円"
+            style: money_amount_large
+          
+          - type: text
+            name: totalExpense
+            value: "全体支出合計: {total_monthly_expense}円"
+            style: money_amount_large
+          
+          - type: text
+            name: totalPayment
+            value: "全体支払額合計: {total_monthly_payment}円"
+            style: money_amount_large_emphasis
+  
+  - type: card
+    name: paymentDueCard
+    title: 今月の支払期限
+    content:
+      - type: payment_due_list
+        name: paymentDueList
+        items_source: monthly_payment_dues
+        item_template:
+          - type: payment_due_item
+            name: paymentDueItem
+            fields:
+              - type: text
+                name: paymentName
+                value: "{payment_name}"
+                style: payment_name
+              
+              - type: text
+                name: paymentDueDate
+                value: "期限: {payment_due_date}"
+                style: due_date
+                highlight_condition: is_approaching_due_date
+
+actions:
+  - name: change_month
+    description: 表示する月を変更する
+    implementation: update_display_month
+    params:
+      direction: "{direction}"
+  
+  - name: toggle_sidebar
+    description: サイドバーの表示・非表示を切り替える
+    implementation: toggle_sidebar_visibility
+  
+  - name: navigate_to_screen
+    description: 指定された画面に遷移する
+    implementation: navigate
+    params:
+      screen: "{target_screen}" 

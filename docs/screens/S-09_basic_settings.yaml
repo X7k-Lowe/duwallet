@@ -1,0 +1,125 @@
+id: S-09
+name: 基本設定編集画面
+description: 家計簿の基本設定を編集する画面
+
+components:
+  - type: header
+    name: screenHeader
+    fields:
+      - type: text
+        name: screenTitle
+        value: 基本設定
+        style: header_title
+  
+  - type: form
+    name: basicSettingsForm
+    fields:
+      - type: text
+        name: walletName
+        label: 家計簿名
+        required: true
+        value: "{wallet_name}"
+      
+      - type: radio
+        name: acceptJoinRequests
+        label: 参加申請
+        options:
+          - value: true
+            label: 参加申請を受け付ける
+          - value: false
+            label: 参加申請を受け付けない
+        value: "{accept_join_requests}"
+        help_text: オフにすると参加コードを知っていても申請できなくなります
+      
+      - type: group
+        name: joinCodeGroup
+        condition: acceptJoinRequests
+        fields:
+          - type: text
+            name: currentJoinCode
+            label: 現在の参加コード
+            readonly: true
+            value: "{current_join_code}"
+          
+          - type: button
+            name: regenerateJoinCodeButton
+            label: 参加コードを再生成
+            action: regenerate_join_code
+            confirm: true
+            confirm_message: "参加コードを再生成すると、古いコードでは参加申請できなくなります。よろしいですか？"
+          
+          - type: checkbox
+            name: manualJoinCode
+            label: 参加コードを手動で設定する
+            action: toggle_manual_join_code
+          
+          - type: text
+            name: newJoinCode
+            label: 新しい参加コード
+            condition: manual_join_code
+            placeholder: 英数字6〜12文字
+            min_length: 6
+            max_length: 12
+      
+      - type: divider
+      
+      - type: section
+        name: dangerZoneSection
+        title: 危険な操作
+        content:
+          - type: button
+            name: deleteWalletButton
+            label: この家計簿を削除
+            style: danger
+            action: delete_wallet
+            confirm: true
+            confirm_message: "この家計簿を削除すると、すべてのデータが失われ、復元できません。本当に削除しますか？"
+            confirm_button: 削除する
+    
+    buttons:
+      - type: submit
+        name: saveButton
+        label: 保存
+        style: primary
+        action: save_basic_settings
+        next_screen: 家計簿ホーム画面
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        style: secondary
+        action: navigate
+        next_screen: 家計簿ホーム画面
+
+validation:
+  - field: walletName
+    rule: required
+    message: 家計簿名を入力してください
+  
+  - field: newJoinCode
+    rule: pattern
+    pattern: ^[a-zA-Z0-9]{6,12}$
+    message: 参加コードは英数字6〜12文字で入力してください
+    condition: manual_join_code
+
+actions:
+  - name: regenerate_join_code
+    description: 参加コードを自動的に再生成する
+    implementation: regenerate_wallet_join_code
+    success_message: 参加コードを再生成しました
+  
+  - name: toggle_manual_join_code
+    description: 手動参加コード入力フィールドの表示/非表示を切り替える
+    implementation: toggle_manual_code_input
+  
+  - name: save_basic_settings
+    description: 基本設定を保存する
+    implementation: save_wallet_basic_settings
+    success_redirect: 家計簿ホーム画面
+    error_action: display_error
+  
+  - name: delete_wallet
+    description: 家計簿を削除する
+    implementation: delete_wallet
+    success_redirect: 家計簿選択画面
+    error_action: display_error 

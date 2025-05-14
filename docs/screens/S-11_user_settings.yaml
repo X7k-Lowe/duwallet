@@ -1,0 +1,145 @@
+id: S-11
+name: ユーザー設定画面
+description: ユーザー情報の編集や設定を行う画面
+
+auth_required: true
+
+components:
+  - type: header
+    name: screenHeader
+    fields:
+      - type: text
+        name: screenTitle
+        value: ユーザー設定
+        style: header_title
+  
+  - type: form
+    name: userSettingsForm
+    fields:
+      - type: section
+        name: profileSection
+        title: プロフィール
+        content:
+          - type: text
+            name: userName
+            label: 名前
+            required: true
+            value: "{user_name}"
+          
+          - type: email
+            name: userEmail
+            label: Eメール
+            required: true
+            value: "{user_email}"
+            readonly: true
+            help_text: Eメールアドレスは変更できません
+          
+          - type: radio
+            name: userGender
+            label: 性別
+            options:
+              - value: male
+                label: 男性
+              - value: female
+                label: 女性
+              - value: other
+                label: その他
+            value: "{user_gender}"
+      
+      - type: section
+        name: accountSection
+        title: アカウント設定
+        content:
+          - type: radio
+            name: multipleWallets
+            label: 複数家計簿への参加
+            options:
+              - value: true
+                label: 複数の家計簿に参加する
+              - value: false
+                label: 一つの家計簿のみに参加する
+                disabled_condition: has_multiple_active_wallets
+            value: "{multiple_wallets}"
+            help_text: "{has_multiple_active_wallets ? '複数の家計簿に参加中のため、一つの家計簿のみに参加するには他の家計簿から退会する必要があります。' : '変更すると次回ログイン時に反映されます。'}"
+      
+      - type: section
+        name: securitySection
+        title: セキュリティ
+        content:
+          - type: password
+            name: currentPassword
+            label: 現在のパスワード
+            required_condition: changing_password
+          
+          - type: password
+            name: newPassword
+            label: 新しいパスワード
+            min_length: 8
+            help_text: 8文字以上で入力してください
+          
+          - type: password
+            name: confirmPassword
+            label: 新しいパスワード（確認）
+            required_condition: newPassword
+      
+      - type: section
+        name: dangerZoneSection
+        title: 危険な操作
+        content:
+          - type: button
+            name: deleteAccountButton
+            label: アカウントを削除
+            style: danger
+            action: delete_account
+            confirm: true
+            confirm_message: "アカウントを削除すると、すべてのデータが失われ、復元できません。本当に削除しますか？"
+            confirm_button: 削除する
+    
+    buttons:
+      - type: submit
+        name: saveButton
+        label: 保存
+        style: primary
+        action: save_user_settings
+        next_screen: "{return_screen || '家計簿ホーム画面'}"
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        style: secondary
+        action: navigate
+        next_screen: "{return_screen || '家計簿ホーム画面'}"
+
+validation:
+  - field: userName
+    rule: required
+    message: 名前を入力してください
+  
+  - field: currentPassword
+    rule: required
+    message: 現在のパスワードを入力してください
+    condition: newPassword
+  
+  - field: newPassword
+    rule: min_length
+    value: 8
+    message: 新しいパスワードは8文字以上で入力してください
+  
+  - field: confirmPassword
+    rule: match
+    target: newPassword
+    message: パスワードが一致しません
+    condition: newPassword
+
+actions:
+  - name: save_user_settings
+    description: ユーザー設定を保存する
+    implementation: save_user_settings_data
+    success_redirect: "{return_screen || '家計簿ホーム画面'}"
+    error_action: display_error
+  
+  - name: delete_account
+    description: ユーザーアカウントを削除する
+    implementation: delete_user_account
+    success_redirect: タイトル画面
+    error_action: display_error 

@@ -1,0 +1,83 @@
+id: S-01
+name: タイトル画面
+description: アプリケーションの起動時に表示される最初の画面
+
+initialization:
+  - check_authentication:
+      authenticated:
+        - check_user_wallets:
+            has_wallets:
+              - check_multiple_wallets_setting:
+                  multiple_wallets:
+                    navigate_to: 家計簿選択画面
+                  single_wallet:
+                    navigate_to: 家計簿ホーム画面
+            no_wallets:
+              navigate_to: 家計簿選択画面
+      not_authenticated:
+        continue
+
+components:
+  - type: text
+    name: appTitle
+    value: duwallet
+    style: large_title
+  
+  - type: form
+    name: loginForm
+    fields:
+      - type: email
+        name: email
+        label: Eメール
+        required: true
+      
+      - type: password
+        name: password
+        label: パスワード
+        required: true
+      
+      - type: checkbox
+        name: rememberMe
+        label: ログイン状態を保持する
+    
+    buttons:
+      - type: submit
+        name: loginButton
+        label: ログイン
+        action: login
+        next_screen: auto_redirect
+  
+  - type: link
+    name: registerLink
+    label: 新規ユーザー登録
+    action: navigate
+    next_screen: ユーザー登録画面
+
+validation:
+  - field: email
+    rule: email_format
+    message: 有効なメールアドレスを入力してください
+  
+  - field: password
+    rule: required
+    message: パスワードを入力してください
+
+actions:
+  - name: login
+    description: ユーザー認証を行い、認証成功時に適切な画面に自動遷移する
+    implementation: Supabase Auth
+    success_action: auto_redirect
+    error_action: display_error
+  
+  - name: auto_redirect
+    description: ログイン状態、参加家計簿の有無、複数家計簿設定に基づいて適切な画面に自動遷移する
+    implementation:
+      - check_user_wallets:
+          has_wallets:
+            - check_multiple_wallets_setting:
+                multiple_wallets:
+                  navigate_to: 家計簿選択画面
+                single_wallet:
+                  navigate_to: 家計簿ホーム画面
+          no_wallets:
+            navigate_to: 家計簿選択画面 

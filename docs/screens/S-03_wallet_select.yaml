@@ -1,0 +1,115 @@
+id: S-03
+name: 家計簿選択画面
+description: 参加可能な家計簿の一覧を表示し、選択または新規作成する画面
+
+components:
+  - type: text
+    name: screenTitle
+    value: 家計簿選択
+    style: screen_title
+  
+  - type: conditional
+    condition: user_has_no_wallets
+    content:
+      - type: text
+        name: noWalletsMessage
+        value: まだ家計簿に参加していません。新しく作成するか、参加コードで既存の家計簿に参加しましょう。
+        style: info_message
+  
+  - type: conditional
+    condition: has_pending_requests
+    content:
+      - type: text
+        name: pendingRequestMessage
+        value: "申請中の家計簿: {pending_request_count}件"
+        style: info_message_highlight
+  
+  - type: list
+    name: walletsList
+    item_type: wallet
+    empty_message: 参加している家計簿はありません
+    items_source: user_wallets
+    item_template:
+      - type: card
+        name: walletCard
+        fields:
+          - type: text
+            name: walletName
+            value: "{wallet_name}"
+            style: card_title
+          - type: text
+            name: memberCount
+            value: "参加者: {member_count}人"
+            style: card_subtitle
+        actions:
+          - type: button
+            name: selectButton
+            label: 選択
+            action: select_wallet
+            params:
+              wallet_id: "{wallet_id}"
+            next_screen: 家計簿ホーム画面
+  
+  - type: form
+    name: joinWalletForm
+    title: 参加コードで参加
+    fields:
+      - type: text
+        name: joinCode
+        label: 参加コード
+        required: true
+    
+    buttons:
+      - type: submit
+        name: joinButton
+        label: 参加申請
+        action: join_wallet
+  
+  - type: button
+    name: createWalletButton
+    label: 新しい家計簿を作成
+    style: primary
+    action: navigate
+    next_screen: 家計簿作成画面
+  
+  - type: button
+    name: userSettingsButton
+    label: ユーザー設定
+    style: secondary
+    action: navigate
+    next_screen: ユーザー設定画面
+    params:
+      return_screen: 家計簿選択画面
+  
+  - type: button
+    name: logoutButton
+    label: ログアウト
+    style: secondary
+    action: logout
+    next_screen: タイトル画面
+
+validation:
+  - field: joinCode
+    rule: required
+    message: 参加コードを入力してください
+
+actions:
+  - name: select_wallet
+    description: 選択した家計簿のホーム画面に遷移する
+    implementation: 
+      - load_wallet_data
+      - navigate
+    success_redirect: 家計簿ホーム画面
+  
+  - name: join_wallet
+    description: 入力された参加コードで家計簿への参加を申請する
+    implementation: 
+      - validate_join_code
+      - create_join_request
+    success_message: 参加申請を送信しました。承認されるまでお待ちください。
+    error_action: display_error
+  
+  - name: logout
+    description: ユーザーをログアウトさせる
+    implementation: Supabase Auth
+    success_redirect: タイトル画面 

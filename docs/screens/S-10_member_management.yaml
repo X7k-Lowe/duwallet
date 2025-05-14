@@ -1,0 +1,161 @@
+id: S-10
+name: 参加ユーザー管理画面
+description: 家計簿の参加ユーザーと申請ユーザーを管理する画面
+
+components:
+  - type: header
+    name: screenHeader
+    fields:
+      - type: text
+        name: screenTitle
+        value: 参加ユーザー管理
+        style: header_title
+  
+  - type: card
+    name: memberListCard
+    title: 参加ユーザー
+    content:
+      - type: list
+        name: memberList
+        items_source: wallet_members
+        empty_message: 参加ユーザーはいません
+        item_template:
+          - type: member_item
+            name: memberItem
+            fields:
+              - type: text
+                name: memberName
+                value: "{member_name}"
+                style: member_name
+              
+              - type: text
+                name: memberEmail
+                value: "{member_email}"
+                style: member_email
+              
+              - type: badge
+                name: memberRole
+                value: "{member_role}"
+                style: 
+                  admin: admin_badge
+                  regular: regular_badge
+            
+            actions:
+              - type: select
+                name: roleSelect
+                label: ロール
+                options:
+                  - value: admin
+                    label: 管理ユーザー
+                  - value: regular
+                    label: 一般ユーザー
+                value: "{member_role}"
+                disabled_condition: current_user_id == member_id || is_admin == false
+                action: change_member_role
+                params:
+                  member_id: "{member_id}"
+              
+              - type: button
+                name: removeMemberButton
+                label: 削除
+                style: danger
+                disabled_condition: current_user_id == member_id || is_admin == false
+                action: remove_member
+                params:
+                  member_id: "{member_id}"
+                  member_name: "{member_name}"
+                confirm: true
+                confirm_message: "「{member_name}」をこの家計簿から削除しますか？"
+  
+  - type: conditional
+    condition: has_join_requests
+    content:
+      - type: card
+        name: joinRequestsCard
+        title: 参加申請
+        content:
+          - type: list
+            name: joinRequestsList
+            items_source: join_requests
+            empty_message: 参加申請はありません
+            item_template:
+              - type: join_request_item
+                name: joinRequestItem
+                fields:
+                  - type: text
+                    name: requestUserName
+                    value: "{request_user_name}"
+                    style: request_user_name
+                  
+                  - type: text
+                    name: requestUserEmail
+                    value: "{request_user_email}"
+                    style: request_user_email
+                  
+                  - type: text
+                    name: requestDate
+                    value: "申請日: {request_date}"
+                    style: request_date
+                
+                actions:
+                  - type: button
+                    name: approveButton
+                    label: 承認
+                    style: success
+                    disabled_condition: is_admin == false
+                    action: approve_join_request
+                    params:
+                      request_id: "{request_id}"
+                      user_id: "{request_user_id}"
+                  
+                  - type: button
+                    name: rejectButton
+                    label: 却下
+                    style: danger
+                    disabled_condition: is_admin == false
+                    action: reject_join_request
+                    params:
+                      request_id: "{request_id}"
+                      user_id: "{request_user_id}"
+  
+  - type: button
+    name: backButton
+    label: 戻る
+    action: navigate
+    next_screen: 家計簿ホーム画面
+
+actions:
+  - name: change_member_role
+    description: ユーザーのロールを変更する
+    implementation: update_member_role
+    params:
+      member_id: "{member_id}"
+      role: "{selected_value}"
+    success_message: ユーザーのロールを変更しました
+    error_action: display_error
+  
+  - name: remove_member
+    description: ユーザーを家計簿から削除する
+    implementation: remove_wallet_member
+    params:
+      member_id: "{member_id}"
+    success_message: "「{member_name}」を家計簿から削除しました"
+    error_action: display_error
+  
+  - name: approve_join_request
+    description: 参加申請を承認する
+    implementation: approve_wallet_join_request
+    params:
+      request_id: "{request_id}"
+      user_id: "{request_user_id}"
+    success_message: 参加申請を承認しました
+    error_action: display_error
+  
+  - name: reject_join_request
+    description: 参加申請を却下する
+    implementation: reject_wallet_join_request
+    params:
+      request_id: "{request_id}"
+      user_id: "{request_user_id}"
+    success_message: 参加申請を却下しました
+    error_action: display_error 

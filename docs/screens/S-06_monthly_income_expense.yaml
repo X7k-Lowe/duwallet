@@ -1,0 +1,364 @@
+id: S-06
+name: 月次収支登録画面
+description: 指定月のユーザー別および共通の収支を登録する画面
+
+auth_required: true
+wallet_membership_required: true
+
+components:
+  - type: header
+    name: screenHeader
+    fields:
+      - type: text
+        name: screenTitle
+        value: 月次収支登録
+        style: header_title
+      
+      - type: text
+        name: targetMonth
+        value: "{target_month_display}"
+        style: header_subtitle
+  
+  - type: tabs
+    name: userTabs
+    tabs_source: wallet_users
+    tab_template:
+      - type: tab
+        name: userTab
+        label: "{user_name}"
+        content:
+          - type: list
+            name: registeredIncomeExpenseList
+            title: 登録済み収支
+            items_source: user_income_expense_items
+            sort_by: transaction_date
+            sort_order: desc
+            empty_message: まだ登録済みの収支はありません
+            item_template:
+              - type: card
+                name: incomeExpenseCard
+                fields:
+                  - type: text
+                    name: transactionDate
+                    value: "{transaction_date}"
+                    style: date_display
+                  
+                  - type: text
+                    name: description
+                    value: "{description}"
+                    style: item_description
+                  
+                  - type: text
+                    name: amount
+                    value: "{is_income ? '+' : '-'}{amount}円"
+                    style: "{is_income ? 'income_amount' : 'expense_amount'}"
+                  
+                  - type: text
+                    name: autoAddNext
+                    value: "{auto_add_next ? '自動追加: 有効' : ''}"
+                    style: auto_add_label
+                    visible: auto_add_next
+                
+                actions:
+                  - type: button
+                    name: editButton
+                    label: 編集
+                    icon: edit
+                    action: edit_income_expense
+                    params:
+                      item_id: "{item_id}"
+                  
+                  - type: button
+                    name: deleteButton
+                    label: 削除
+                    icon: delete
+                    style: danger
+                    action: delete_income_expense
+                    params:
+                      item_id: "{item_id}"
+                    confirm: true
+                    confirm_message: "この収支項目を削除してもよろしいですか？"
+          
+          - type: form
+            name: userIncomeExpenseForm
+            fields:
+              - type: section
+                name: incomeSection
+                title: 収入追加
+                
+                fields:
+                  - type: dynamic_fields
+                    name: incomeFields
+                    items_source: user_income_items
+                    add_button_label: 収入項目を追加
+                    item_template:
+                      - type: group
+                        name: incomeItem
+                        fields:
+                          - type: date
+                            name: incomeDate
+                            label: 日付
+                            value: "{current_date}"
+                          
+                          - type: text
+                            name: incomeDescription
+                            label: 項目
+                            placeholder: 給料、ボーナスなど
+                          
+                          - type: number
+                            name: incomeAmount
+                            label: 金額
+                            min: 0
+                            placeholder: 0
+                          
+                          - type: checkbox
+                            name: incomeAutoAddNext
+                            label: 次月以降も自動追加
+                            default: false
+              
+              - type: section
+                name: expenseSection
+                title: 支出追加
+                
+                fields:
+                  - type: dynamic_fields
+                    name: expenseFields
+                    items_source: user_expense_items
+                    add_button_label: 支出項目を追加
+                    item_template:
+                      - type: group
+                        name: expenseItem
+                        fields:
+                          - type: date
+                            name: expenseDate
+                            label: 日付
+                            value: "{current_date}"
+                          
+                          - type: text
+                            name: expenseDescription
+                            label: 項目
+                            placeholder: 食費、交通費など
+                          
+                          - type: number
+                            name: expenseAmount
+                            label: 金額
+                            min: 0
+                            placeholder: 0
+                          
+                          - type: checkbox
+                            name: expenseAutoAddNext
+                            label: 次月以降も自動追加
+                            default: false
+  
+  - type: tab
+    name: commonTab
+    label: 共通収支
+    content:
+      - type: list
+        name: registeredCommonIncomeExpenseList
+        title: 登録済み共通収支
+        items_source: common_income_expense_items
+        sort_by: transaction_date
+        sort_order: desc
+        empty_message: まだ登録済みの共通収支はありません
+        item_template:
+          - type: card
+            name: commonIncomeExpenseCard
+            fields:
+              - type: text
+                name: commonTransactionDate
+                value: "{transaction_date}"
+                style: date_display
+              
+              - type: text
+                name: commonDescription
+                value: "{description}"
+                style: item_description
+              
+              - type: text
+                name: commonAmount
+                value: "{is_income ? '+' : '-'}{amount}円"
+                style: "{is_income ? 'income_amount' : 'expense_amount'}"
+              
+              - type: text
+                name: commonAutoAddNext
+                value: "{auto_add_next ? '自動追加: 有効' : ''}"
+                style: auto_add_label
+                visible: auto_add_next
+            
+            actions:
+              - type: button
+                name: editCommonButton
+                label: 編集
+                icon: edit
+                action: edit_common_income_expense
+                params:
+                  item_id: "{item_id}"
+              
+              - type: button
+                name: deleteCommonButton
+                label: 削除
+                icon: delete
+                style: danger
+                action: delete_common_income_expense
+                params:
+                  item_id: "{item_id}"
+                confirm: true
+                confirm_message: "この共通収支項目を削除してもよろしいですか？"
+      
+      - type: form
+        name: commonIncomeExpenseForm
+        fields:
+          - type: section
+            name: commonIncomeSection
+            title: 共通収入追加
+            
+            fields:
+              - type: dynamic_fields
+                name: commonIncomeFields
+                items_source: common_income_items
+                add_button_label: 共通収入項目を追加
+                item_template:
+                  - type: group
+                    name: commonIncomeItem
+                    fields:
+                      - type: date
+                        name: commonIncomeDate
+                        label: 日付
+                        value: "{current_date}"
+                      
+                      - type: text
+                        name: commonIncomeDescription
+                        label: 項目
+                        placeholder: 家賃収入、利子など
+                      
+                      - type: number
+                        name: commonIncomeAmount
+                        label: 金額
+                        min: 0
+                        placeholder: 0
+                      
+                      - type: checkbox
+                        name: commonIncomeAutoAddNext
+                        label: 次月以降も自動追加
+                        default: false
+          
+          - type: section
+            name: commonExpenseSection
+            title: 共通支出追加
+            
+            fields:
+              - type: dynamic_fields
+                name: commonExpenseFields
+                items_source: common_expense_items
+                add_button_label: 共通支出項目を追加
+                item_template:
+                  - type: group
+                    name: commonExpenseItem
+                    fields:
+                      - type: date
+                        name: commonExpenseDate
+                        label: 日付
+                        value: "{current_date}"
+                      
+                      - type: text
+                        name: commonExpenseDescription
+                        label: 項目
+                        placeholder: 家賃、光熱費など
+                      
+                      - type: number
+                        name: commonExpenseAmount
+                        label: 金額
+                        min: 0
+                        placeholder: 0
+                      
+                      - type: checkbox
+                        name: commonExpenseAutoAddNext
+                        label: 次月以降も自動追加
+                        default: false
+  
+  - type: summary
+    name: totalSummary
+    fields:
+      - type: text
+        name: totalIncomeLabel
+        value: 全体収入合計
+        style: summary_label
+      
+      - type: text
+        name: totalIncome
+        value: "{total_income}円"
+        style: summary_amount
+      
+      - type: text
+        name: totalExpenseLabel
+        value: 全体支出合計
+        style: summary_label
+      
+      - type: text
+        name: totalExpense
+        value: "{total_expense}円"
+        style: summary_amount
+  
+  - type: button_group
+    name: actionButtons
+    buttons:
+      - type: button
+        name: saveButton
+        label: 保存
+        style: primary
+        action: save_income_expense
+        next_screen: 家計簿ホーム画面
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        style: secondary
+        action: navigate
+        next_screen: 家計簿ホーム画面
+
+validation:
+  - field: incomeAmount
+    rule: non_negative
+    message: 金額は0以上の数値を入力してください
+  
+  - field: expenseAmount
+    rule: non_negative
+    message: 金額は0以上の数値を入力してください
+
+actions:
+  - name: save_income_expense
+    description: 入力された収支情報を保存する
+    implementation: save_monthly_income_expense
+    success_redirect: 家計簿ホーム画面
+    error_action: display_error
+  
+  - name: edit_income_expense
+    description: 既存の収支項目を編集する
+    implementation: load_income_expense_for_edit
+    params:
+      item_id: "{item_id}"
+  
+  - name: delete_income_expense
+    description: 収支項目を削除する
+    implementation: delete_income_expense_item
+    params:
+      item_id: "{item_id}"
+    success_action: refresh_income_expense_list
+  
+  - name: edit_common_income_expense
+    description: 既存の共通収支項目を編集する
+    implementation: load_common_income_expense_for_edit
+    params:
+      item_id: "{item_id}"
+  
+  - name: delete_common_income_expense
+    description: 共通収支項目を削除する
+    implementation: delete_common_income_expense_item
+    params:
+      item_id: "{item_id}"
+    success_action: refresh_income_expense_list
+  
+  - name: refresh_income_expense_list
+    description: 収支リストを再読み込みする
+    implementation: reload_income_expense_data 

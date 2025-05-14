@@ -1,0 +1,209 @@
+id: S-08
+name: 支払額算出設定画面
+description: 支払額の算出方法や設定を行う画面
+
+auth_required: true
+wallet_membership_required: true
+
+components:
+  - type: header
+    name: screenHeader
+    fields:
+      - type: text
+        name: screenTitle
+        value: 支払額算出設定
+        style: header_title
+      
+      - type: text
+        name: targetMonth
+        value: "{target_month_display}"
+        style: header_subtitle
+  
+  - type: card
+    name: calculationMethodCard
+    title: 算出方法
+    content:
+      - type: radio
+        name: calculationMethod
+        options:
+          - value: income_ratio
+            label: 収入割合方式
+            description: 全ユーザー月次支払額合計×ユーザーの収入率
+          
+          - value: equal_balance
+            label: 残金均一方式
+            description: ユーザー別月次収入合計-((全ユーザー月次収入合計-全ユーザー月次支出合計)÷参加ユーザー数)
+        
+        default: income_ratio
+        action: change_calculation_method
+  
+  - type: card
+    name: incomeReferenceCard
+    title: 収入参照月
+    content:
+      - type: radio
+        name: incomeReferenceMonth
+        options:
+          - value: current_month
+            label: 今月の収入
+          
+          - value: previous_month
+            label: 前月の収入
+            disabled_condition: previous_month_not_exists
+        
+        default: current_month
+        action: change_income_reference
+  
+  - type: card
+    name: roundingSettingCard
+    title: 切上げ桁設定
+    content:
+      - type: select
+        name: roundingDigit
+        label: 切上げ桁
+        options:
+          - value: 0
+            label: 1円単位（切上げなし）
+          
+          - value: 1
+            label: 10円単位
+          
+          - value: 2
+            label: 100円単位
+          
+          - value: 3
+            label: 1,000円単位
+          
+          - value: 4
+            label: 10,000円単位
+        
+        default: 1
+        action: change_rounding_digit
+  
+  - type: card
+    name: paymentRateAdjustmentCard
+    title: 支払率微調整
+    content:
+      - type: list
+        name: userPaymentRateList
+        items_source: wallet_users
+        item_template:
+          - type: group
+            name: userPaymentRateGroup
+            fields:
+              - type: text
+                name: userName
+                value: "{user_name}"
+                style: user_name
+              
+              - type: text
+                name: basePaymentRate
+                value: "基本支払率: {base_payment_rate}%"
+                style: base_rate
+              
+              - type: slider
+                name: paymentRateAdjustment
+                label: 調整
+                min: "{min_adjustment}"
+                max: "{max_adjustment}"
+                step: 1
+                value: 0
+                format: "+{value}%"
+                action: adjust_payment_rate
+                params:
+                  user_id: "{user_id}"
+              
+              - type: text
+                name: finalPaymentRate
+                value: "最終支払率: {final_payment_rate}%"
+                style: final_rate
+  
+  - type: card
+    name: calculationResultCard
+    title: 算出結果
+    content:
+      - type: list
+        name: userPaymentAmountList
+        items_source: wallet_users
+        item_template:
+          - type: group
+            name: userPaymentAmountGroup
+            fields:
+              - type: text
+                name: userName
+                value: "{user_name}"
+                style: user_name
+              
+              - type: text
+                name: userPaymentAmount
+                value: "支払額: {user_payment_amount}円"
+                style: payment_amount
+              
+              - type: text
+                name: userPaymentRate
+                value: "支払率: {user_payment_rate}%"
+                style: payment_rate
+      
+      - type: divider
+      
+      - type: text
+        name: totalPaymentAmount
+        value: "全体支払額合計: {total_payment_amount}円"
+        style: total_payment
+  
+  - type: button_group
+    name: actionButtons
+    buttons:
+      - type: button
+        name: saveButton
+        label: 設定を保存
+        style: primary
+        action: save_calculation_settings
+        next_screen: 家計簿ホーム画面
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        style: secondary
+        action: navigate
+        next_screen: 家計簿ホーム画面
+
+actions:
+  - name: change_calculation_method
+    description: 支払額算出方法を変更する
+    implementation: update_calculation_method
+    params:
+      method: "{selected_value}"
+    trigger: recalculate_payment
+  
+  - name: change_income_reference
+    description: 収入参照先を変更する
+    implementation: update_income_reference
+    params:
+      reference: "{selected_value}"
+    trigger: recalculate_payment
+  
+  - name: change_rounding_digit
+    description: 切上げ桁を変更する
+    implementation: update_rounding_digit
+    params:
+      digit: "{selected_value}"
+    trigger: recalculate_payment
+  
+  - name: adjust_payment_rate
+    description: ユーザーの支払率を調整する
+    implementation: update_payment_rate_adjustment
+    params:
+      user_id: "{user_id}"
+      adjustment: "{selected_value}"
+    trigger: recalculate_payment
+  
+  - name: recalculate_payment
+    description: 支払額を再計算する
+    implementation: calculate_payment_amounts
+  
+  - name: save_calculation_settings
+    description: 支払額算出設定を保存する
+    implementation: save_calculation_settings
+    success_redirect: 家計簿ホーム画面
+    error_action: display_error 

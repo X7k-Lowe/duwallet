@@ -1,0 +1,125 @@
+id: S-07
+name: 支払先登録画面
+description: 支払先情報を登録・編集する画面
+
+components:
+  - type: header
+    name: screenHeader
+    fields:
+      - type: text
+        name: screenTitle
+        value: 支払先登録
+        style: header_title
+  
+  - type: list
+    name: paymentDestinationList
+    title: 登録済み支払先
+    items_source: payment_destinations
+    empty_message: 登録済みの支払先はありません
+    item_template:
+      - type: card
+        name: paymentDestinationCard
+        fields:
+          - type: text
+            name: destinationName
+            value: "{destination_name}"
+            style: card_title
+          
+          - type: text
+            name: paymentDueDay
+            value: "支払日: 毎月{payment_due_day}日"
+            style: card_subtitle
+        
+        actions:
+          - type: button
+            name: editButton
+            label: 編集
+            action: edit_payment_destination
+            params:
+              destination_id: "{destination_id}"
+          
+          - type: button
+            name: deleteButton
+            label: 削除
+            style: danger
+            action: delete_payment_destination
+            params:
+              destination_id: "{destination_id}"
+              destination_name: "{destination_name}"
+            confirm: true
+            confirm_message: "「{destination_name}」を削除してもよろしいですか？"
+  
+  - type: form
+    name: paymentDestinationForm
+    title: 新規支払先登録
+    fields:
+      - type: text
+        name: destinationName
+        label: 支払先名称
+        required: true
+        placeholder: 例：家賃、電気代、ガス代
+      
+      - type: radio
+        name: paymentDueType
+        label: 支払日タイプ
+        options:
+          - value: fixed_day
+            label: 固定日付
+          - value: last_day
+            label: 月末最終日
+        default: fixed_day
+      
+      - type: number
+        name: paymentDueDay
+        label: 支払日（日）
+        condition: paymentDueType == 'fixed_day'
+        min: 1
+        max: 31
+        placeholder: 例：27
+        help_text: 1日〜31日の間で指定してください
+    
+    buttons:
+      - type: submit
+        name: registerButton
+        label: 登録
+        action: register_payment_destination
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        action: navigate
+        next_screen: 家計簿ホーム画面
+
+validation:
+  - field: destinationName
+    rule: required
+    message: 支払先名称を入力してください
+  
+  - field: paymentDueDay
+    rule: range
+    min: 1
+    max: 31
+    message: 支払日は1日〜31日の間で指定してください
+    condition: paymentDueType == 'fixed_day'
+
+actions:
+  - name: register_payment_destination
+    description: 支払先情報を登録する
+    implementation: save_payment_destination
+    success_message: 支払先を登録しました
+    success_action: clear_form
+    error_action: display_error
+  
+  - name: edit_payment_destination
+    description: 支払先情報を編集用フォームに読み込む
+    implementation: load_payment_destination_to_form
+    params:
+      destination_id: "{destination_id}"
+  
+  - name: delete_payment_destination
+    description: 支払先情報を削除する
+    implementation: delete_payment_destination
+    params:
+      destination_id: "{destination_id}"
+    success_message: "「{destination_name}」を削除しました"
+    error_action: display_error 

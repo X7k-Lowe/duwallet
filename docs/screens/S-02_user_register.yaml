@@ -1,0 +1,93 @@
+id: S-02
+name: ユーザー登録画面
+description: 新規ユーザーの登録情報を入力する画面
+
+components:
+  - type: text
+    name: screenTitle
+    value: ユーザー登録
+    style: screen_title
+  
+  - type: form
+    name: registerForm
+    fields:
+      - type: email
+        name: email
+        label: Eメール
+        required: true
+      
+      - type: password
+        name: password
+        label: パスワード
+        required: true
+        min_length: 8
+      
+      - type: password
+        name: passwordConfirm
+        label: パスワード（確認）
+        required: true
+      
+      - type: text
+        name: userName
+        label: 名前
+        required: true
+      
+      - type: radio
+        name: gender
+        label: 性別
+        options:
+          - value: male
+            label: 男性
+          - value: female
+            label: 女性
+          - value: other
+            label: その他
+      
+      - type: radio
+        name: multipleWallets
+        label: 複数家計簿への参加
+        options:
+          - value: true
+            label: 複数の家計簿に参加する
+          - value: false
+            label: 一つの家計簿のみに参加する
+        default: false
+    
+    buttons:
+      - type: submit
+        name: registerButton
+        label: 登録
+        action: register
+        next_screen: 家計簿選択画面
+      
+      - type: button
+        name: cancelButton
+        label: キャンセル
+        action: navigate
+        next_screen: タイトル画面
+
+validation:
+  - field: email
+    rule: email_format
+    message: 有効なメールアドレスを入力してください
+  
+  - field: password
+    rule: min_length
+    value: 8
+    message: パスワードは8文字以上で入力してください
+  
+  - field: passwordConfirm
+    rule: match
+    target: password
+    message: パスワードが一致しません
+  
+  - field: userName
+    rule: required
+    message: 名前を入力してください
+
+actions:
+  - name: register
+    description: ユーザー情報を登録し、登録成功時に家計簿選択画面に遷移する
+    implementation: Supabase Auth + DB
+    success_redirect: 家計簿選択画面
+    error_action: display_error 
