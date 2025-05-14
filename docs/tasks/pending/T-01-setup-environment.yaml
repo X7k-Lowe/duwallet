@@ -12,36 +12,47 @@ description: |
   - 旧appのdeploy.yml/ci.ymlから必要なSecrets名・設定も反映
   - Windows/Mac両対応
 steps:
+  - id: 0
+    name: "実装ファイルの準備"
+    description: |
+      - duwalletアプリの実装ファイル（package.json, pnpm-lock.yaml, app/ ディレクトリ、lib/、components/ など）を本リポジトリ直下に配置する
+      - 必要に応じて、設計資料リポジトリや雛形リポジトリからコピーする
+      - package.jsonにはNext.js, Supabase, pnpm, TypeScript等の依存パッケージを記載
+      - .gitignore, README.md, Dockerfile.dev, docker-compose.dev.yaml等も合わせて配置
+      - これらが揃っていない場合、以降の手順（pnpm install, docker compose等）はエラーになります
   - id: 1
     name: "前提ソフトウェアのインストール"
     description: |
       - Node.js 18 LTS, pnpm 8.15.4, Git 2.40+, Docker Desktop 4.27+ をインストール
       - WindowsはPowerShellまたはGit Bash、Macはbrew推奨
   - id: 2
-    name: "リポジトリ取得"
+    name: "プロジェクト初期化"
     description: |
-      - git clone https://github.com/<your-account>/duwallet.git
-      - cd duwallet
+      - duwalletディレクトリ直下で新規プロジェクトを初期化
+      - 必要な実装ファイル（package.json, app/, lib/, components/ など）が無い場合は追加
+      - 既存リポジトリのclone手順は不要
   - id: 3
     name: ".env.localの作成とSecrets設定"
     description: |
       - env_template.txtを.env.localにコピー
-      - Supabaseプロジェクトから各種キー（URL, ANON_KEY, SERVICE_ROLE_KEY, JWT_SECRET）を取得し、.env.localに記載
+      - Supabase管理画面から各種キー（SUPABASE_URL, ANON_KEY, SERVICE_ROLE_KEY, JWT_SECRET）を取得し、.env.localに記載
       - Vercel, GitHub Actions用のトークン/IDも必要に応じて設定
       - Secrets_Env_Guide.mdを参照
       - 旧appのdeploy.yml/ci.ymlのSecrets名（VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID）も考慮
+      - ※ 本リポジトリは実装リポジトリです。必ずアプリ本体のpackage.json等が存在することを確認してください
   - id: 4
-    name: "Supabaseローカル起動"
+    name: "Docker Composeによる初回起動"
     description: |
-      - supabase CLIで supabase init, supabase start
-      - もしくは docker compose -f docker-compose.dev.yaml up -d --build
+      - docker compose -f docker-compose.dev.yaml up -d --build で全サービスを初回起動
       - DB: localhost:54322, ユーザ/パス: supabase
+      - package.json等が存在しない場合はDockerビルドでエラーになります。先に実装ファイルを追加してください
   - id: 5
     name: "アプリケーション起動"
     description: |
       - pnpm install
       - pnpm dev で http://localhost:3000 で起動
       - docker-compose利用時は http://localhost:3000 でNext.js, http://localhost:54322 でDB
+      - ※ 実装ファイル（package.json, app/等）が無い場合は先に実装を追加してください
   - id: 6
     name: "CI/CD・本番環境Secrets/Token/ID設定"
     description: |
