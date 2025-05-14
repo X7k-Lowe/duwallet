@@ -1,0 +1,42 @@
+# duwallet プロジェクト構成・依存パッケージ設計同期タスク定義
+id: T-02-sync-project-structure
+name: "プロジェクト構成・依存パッケージの設計同期"
+description: |
+  docs/設計（ディレクトリ構成・技術スタック・画面仕様）と現行プロジェクトの齟齬を解消し、運用ルールに完全準拠した状態にするためのタスク。
+  - 必須ディレクトリ（lib, components, hooks, stores, types等）の新規作成
+  - src/app配下にauth, wallet, user等のルートディレクトリ作成
+  - 必須依存パッケージ（shadcn/ui, zustand, supabase, tanstack query, prettier, vitest等）の追加・バージョン統一
+  - 不要な/齟齬のある依存・構成の整理
+  - 変更内容・成果物をtask_manager.yamlに登録
+steps:
+  - id: 0
+    name: "設計ドキュメント再解析"
+    description: |
+      - docs/ディレクトリ構成.md・技術スタック.md・画面一覧.mdを再解析し、現状との差分を洗い出す
+  - id: 1
+    name: "必須ディレクトリの新規作成"
+    description: |
+      - lib/, components/, hooks/, stores/, types/ ディレクトリを新規作成
+      - src/app配下に(auth)/, (wallet)/, (user)/等のルートディレクトリを作成
+  - id: 2
+    name: "依存パッケージの追加・統一"
+    description: |
+      - package.jsonにshadcn/ui, zustand, supabase, tanstack query, prettier, vitest等を追加
+      - バージョンはdocs/技術スタック.mdに準拠
+      - 不要な/齟齬のある依存を整理
+  - id: 3
+    name: "成果物・タスク管理の更新"
+    description: |
+      - 変更内容・成果物をdocs/tasks/task_manager.yamlに登録
+      - 本タスク詳細YAMLをpending/に作成
+status: pending
+dependencies: [T-01-setup-environment]
+outputs:
+  - lib/
+  - components/
+  - hooks/
+  - stores/
+  - types/
+  - src/app/(auth)/, (wallet)/, (user)/
+  - package.json（設計通りの依存・バージョン）
+  - 齟齬修正コミット 
