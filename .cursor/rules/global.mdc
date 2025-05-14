@@ -22,8 +22,11 @@ Description: |
 - タスク着手前に `type/T-XX-task-name` 形式でブランチを作成。`XX`はタスク番号、`task-name`は英小文字ハイフン区切り。
   - type例: feature, fix, docs, style, refactor, test, chore, perf, ci, build
   - 例: `feature/T-01-setup-environment`
-- 完了後は関連ファイルを `docs/tasks/done/` へ移動すること。
-- タスクの依存関係や進捗管理は、必要に応じて.mdまたは新規YAMLで管理する（現状task_manager.yamlは未導入）。
+- タスク管理は `docs/tasks/task_manager.yaml` で一元管理し、全タスクを `tasks:` 配列でDAG（依存関係）・進捗・履歴・成果物を明示する。
+- 各タスクの詳細は `docs/tasks/pending/` または `docs/tasks/done/` の個別YAMLで管理し、task_manager.yamlから参照・連携する。
+- タスク完了後は該当YAMLを `done/` へ移動し、`status` を `done` に更新。
+- タスクの依存関係や進捗管理、履歴・成果物の記録もtask_manager.yamlで一元化。
+- 今後タスク追加・編集・削除・履歴管理もこの運用に従う。
 
 ### 3. コミット規約
 - **コミット前チェック必須**:
