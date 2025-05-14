@@ -13,4 +13,4 @@
     - 2025-05-15: 旧appのdeploy.yml/ci.ymlを現行リポジトリの.github/workflows/に移行し、CI/CD運用ルールに統合。
     - 2025-05-15: docs/setup/Secrets_Env_Guide.mdにVERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_IDの用途・設定場所を追記。
     - 2025-05-15: CI/CDパイプラインの動作検証を実施。
-    - 2025-05-15: T-01-setup-environmentタスク id:0〜5 完了。id:6以降（Secrets登録・CI/CD確認）進行中。
+    - 2025-05-15: T-01-setup-environmentタスク id:0〜8 完了。全工程完了。
