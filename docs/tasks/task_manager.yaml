@@ -1,7 +1,7 @@
 - id: T-01-setup-environment
   name: 開発・CI/CD・本番環境セットアップ
   description: duwalletの全環境を正確に構築する
-  status: pending
+  status: done
   depends_on: []
   outputs:
     - .env.local

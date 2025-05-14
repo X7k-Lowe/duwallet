@@ -70,7 +70,7 @@ steps:
     description: |
       - よくあるエラーやTipsはdocs/setup/環境構築手順.md, Secrets_Env_Guide.md参照
       - Windows/Macの違いにも注意
-status: pending
+status: done
 dependencies: []
 outputs:
   - .env.local
