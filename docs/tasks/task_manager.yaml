@@ -12,5 +12,8 @@ pending:
       - 必要なSecrets/Token/IDの登録
     created_at: 2024-06-10T12:00:00Z
     updated_at: 2024-06-10T12:00:00Z
-    logs: []
+    logs:
+      - 2024-06-10: 旧appのdeploy.yml/ci.ymlを現行リポジトリの.github/workflows/に移行し、CI/CD運用ルールに統合。
+      - 2024-06-10: docs/setup/Secrets_Env_Guide.mdにVERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_IDの用途・設定場所を追記。
+      - 2024-06-10: CI/CDパイプラインの動作検証を実施。
 done: [] 

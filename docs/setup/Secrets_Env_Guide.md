@@ -1,4 +1,4 @@
- # 秘密情報・環境変数設定ガイド
+# 秘密情報・環境変数設定ガイド
 
 本書では **duwallet** を動作させるために必要な API キー／トークン類の取得方法と `.env*` への配置方法をまとめます。
 
@@ -21,6 +21,8 @@
 |---------|------|----------|
 | `GITHUB_TOKEN` | GitHub Actions で自リポジトリへ push ／ releases を行う際に自動で付与されるため **手動設定不要** | GitHub Actions 内部 |
 | `VERCEL_TOKEN` | Actions から Vercel デプロイ API を叩く場合 | Vercel Personal Settings > Tokens |
+| `VERCEL_ORG_ID` | Vercel組織ID。Vercelデプロイ時に必要 | Vercel管理画面 > Settings > General |
+| `VERCEL_PROJECT_ID` | VercelプロジェクトID。Vercelデプロイ時に必要 | Vercel管理画面 > Settings > General |
 
 ### Vercel の環境変数マッピング例
 
