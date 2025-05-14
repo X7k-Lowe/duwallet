@@ -19,20 +19,31 @@ Description: |
 - もし新たにYAMLや設計ファイルが追加された場合は、次回以降の同期対象に含めること。
 
 ### 2. タスク管理フロー
-- タスク着手前に `type/T-XX-task-name` 形式でブランチを作成。`XX`はタスク番号、`task-name`は英小文字ハイフン区切り。
+- 【必須】【順序厳守】タスク着手前に必ず `type/T-XX-task-name` 形式でブランチを作成すること。
   - type例: feature, fix, docs, style, refactor, test, chore, perf, ci, build
   - 例: `feature/T-01-setup-environment`
+- 【必須】docs/配下の設計・仕様・スキーマ・画面定義ファイル（.md, .yaml）を毎セッション解析し、内容の矛盾が無いことを確認してからタスクを実行すること。
+  - 画面仕様：docs/screens/*.yaml
+  - DBスキーマ：docs/database_schema/*.md
+  - 技術スタック・ディレクトリ構成：docs/specs/*.md
+  - 環境構築・Secrets：docs/setup/*.md
 - タスク管理は `docs/tasks/task_manager.yaml` で一元管理し、全タスクを `tasks:` 配列でDAG（依存関係）・進捗・履歴・成果物を明示する。
 - 各タスクの詳細は `docs/tasks/pending/` または `docs/tasks/done/` の個別YAMLで管理し、task_manager.yamlから参照・連携する。
 - タスク完了後は該当YAMLを `done/` へ移動し、`status` を `done` に更新。
 - タスクの依存関係や進捗管理、履歴・成果物の記録もtask_manager.yamlで一元化。
 - 今後タスク追加・編集・削除・履歴管理もこの運用に従う。
 
+#### 【AIエージェント用チェックリスト】
+1. [ ] type/T-XX-task-name 形式でブランチを作成したか？
+2. [ ] docs/配下の設計・仕様・スキーマ・画面定義ファイルを全て解析し、矛盾が無いか確認したか？
+3. [ ] task_manager.yamlにタスクを登録・進捗・依存関係を明示したか？
+4. [ ] タスク詳細YAMLをpending/に作成したか？
+5. [ ] タスク完了時にdone/へ移動し、statusをdoneに更新したか？
+
 ### 3. コミット規約
-- **コミット前チェック必須**:
+- 【必須】【順序厳守】コミット前チェック:
   1. 修正後はエラーが**完全に無くなる**までコマンド等で確認し、解消されるまで試行を継続。
-  2. `pnpm lint && pnpm test && pnpm playwright test --reporter=line && pnpm store prune && pnpm install --force && pnpm build` を通過すること。
-  3. 失敗した場合は修正→再実行を繰り返す。
+  2. 失敗した場合は修正→再実行を繰り返す。
 - `--no-verify` でのスキップは禁止。
 - コミットメッセージは `type(scope): subject` 形式で作成する。
   - scope例: auth, ui, api
