@@ -14,20 +14,20 @@
 
 ## カラム定義
 
-| 物理名           | 論理名           | データ型      | 必須 | デフォルト値       | 説明                                                            |
-| ---------------- | ---------------- | ------------- | ---- | ------------------ | --------------------------------------------------------------- |
-| id               | 収支ID           | uuid          | Yes  | uuid_generate_v4() | プライマリキー                                                  |
-| wallet_id        | 家計簿ID         | uuid          | Yes  | なし               | 収支が属する家計簿ID（walletsテーブルの外部キー）               |
-| user_id          | ユーザーID       | uuid          | No   | null               | 収支の所有者ID（usersテーブルの外部キー）、共通収支の場合はnull |
-| is_common        | 共通収支フラグ   | boolean       | Yes  | false              | 共通収支か（true）、ユーザー個別収支か（false）                 |
-| is_income        | 収入フラグ       | boolean       | Yes  | true               | 収入か（true）、支出か（false）                                 |
-| amount           | 金額             | decimal(12,2) | Yes  | 0                  | 収支金額                                                        |
-| description      | 説明             | varchar(255)  | Yes  | なし               | 収支の説明（項目名）                                            |
-| transaction_date | 収支日           | date          | Yes  | CURRENT_DATE       | 収支が発生した日付                                              |
-| year_month       | 年月             | varchar(7)    | Yes  | なし               | 収支の年月（YYYY-MM形式）                                       |
-| auto_add_next    | 次月以降自動追加 | boolean       | Yes  | false              | 次月以降も自動的に追加するか                                    |
-| created_at       | 作成日時         | timestamp     | Yes  | CURRENT_TIMESTAMP  | レコード作成日時                                                |
-| updated_at       | 更新日時         | timestamp     | Yes  | CURRENT_TIMESTAMP  | レコード更新日時                                                |
+| 物理名           | 論理名           | データ型      | 必須 | デフォルト値       | 説明                                                                                |
+| ---------------- | ---------------- | ------------- | ---- | ------------------ | ----------------------------------------------------------------------------------- |
+| id               | 収支ID           | uuid          | Yes  | uuid_generate_v4() | プライマリキー                                                                      |
+| wallet_id        | 家計簿ID         | uuid          | Yes  | なし               | 収支が属する家計簿ID（walletsテーブルの外部キー）                                   |
+| user_id          | ユーザーID       | uuid          | No   | null               | 収支の所有者ID（D-01: users(public.users)テーブルの外部キー）、共通収支の場合はnull |
+| is_common        | 共通収支フラグ   | boolean       | Yes  | false              | 共通収支か（true）、ユーザー個別収支か（false）                                     |
+| is_income        | 収入フラグ       | boolean       | Yes  | true               | 収入か（true）、支出か（false）                                                     |
+| amount           | 金額             | decimal(12,2) | Yes  | 0                  | 収支金額                                                                            |
+| description      | 説明             | varchar(255)  | Yes  | なし               | 収支の説明（項目名）                                                                |
+| transaction_date | 収支日           | date          | Yes  | CURRENT_DATE       | 収支が発生した日付                                                                  |
+| year_month       | 年月             | varchar(7)    | Yes  | なし               | 収支の年月（YYYY-MM形式）                                                           |
+| auto_add_next    | 次月以降自動追加 | boolean       | Yes  | false              | 次月以降も自動的に追加するか                                                        |
+| created_at       | 作成日時         | timestamp     | Yes  | CURRENT_TIMESTAMP  | レコード作成日時                                                                    |
+| updated_at       | 更新日時         | timestamp     | Yes  | CURRENT_TIMESTAMP  | レコード更新日時                                                                    |
 
 ## インデックス
 
@@ -45,12 +45,12 @@
 - ユーザー個別収支の場合（is_common = false）、user_idはnullではありえない
 - 金額は0以上の数値でなければならない
 - 外部キー制約：wallet_id はwalletsテーブルの存在するidを参照
-- 外部キー制約：user_id がnullでない場合、usersテーブルの存在するidを参照
+- 外部キー制約：user_id がnullでない場合、D-01: users(public.users)テーブルの存在するidを参照
 
 ## 関連テーブル
 
 - wallets: 収支が属する家計簿情報
-- users: 収支の所有者情報（ユーザー個別収支の場合）
+- users: 収支の所有者情報（ユーザー個別収支の場合、D-01: users(public.users)を参照）
 
 ## 備考
 

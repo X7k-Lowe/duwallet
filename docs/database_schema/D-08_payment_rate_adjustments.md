@@ -18,7 +18,7 @@
 | ---------------------- | ---------------- | ------------ | ---- | ------------------ | -------------------------------------------- |
 | id                     | 調整値ID         | uuid         | Yes  | uuid_generate_v4() | プライマリキー                               |
 | calculation_setting_id | 支払額算出設定ID | uuid         | Yes  | なし               | D-07: calculation_settingsテーブルの外部キー |
-| user_id                | ユーザーID       | uuid         | Yes  | なし               | D-01: usersテーブルの外部キー                |
+| user_id                | ユーザーID       | uuid         | Yes  | なし               | D-01: users(public.users)テーブルの外部キー                |
 | adjustment_percentage  | 調整率（％）     | decimal(5,2) | Yes  | 0                  | 支払率の調整値（％単位、-100〜100の値）      |
 | created_at             | 作成日時         | timestamp    | Yes  | CURRENT_TIMESTAMP  | レコード作成日時                             |
 | updated_at             | 更新日時         | timestamp    | Yes  | CURRENT_TIMESTAMP  | レコード更新日時                             |
@@ -37,12 +37,12 @@
 - 同一の支払額算出設定内でユーザーごとに一つの調整値のみ持つことができる
 - adjustment_percentageは-100〜100の範囲内の値でなければならない
 - 外部キー制約：calculation_setting_id はcalculation_settingsテーブルの存在するidを参照
-- 外部キー制約：user_id はusersテーブルの存在するidを参照
+- 外部キー制約：user_id はD-01: users(public.users)テーブルの存在するidを参照
 
 ## 関連テーブル
 
 - calculation_settings: この調整値が属する支払額算出設定
-- users: この調整値の対象ユーザー
+- users: この調整値の対象ユーザー (D-01: users(public.users)を参照)
 
 ## 備考
 

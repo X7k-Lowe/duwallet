@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import React, { useState, useEffect } from 'react';
+import { createBrowserClient } from '@supabase/ssr';
+import { Database } from '@/types/supabase';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -46,8 +48,8 @@ export default function RegisterPage() {
       setFormError('すべての必須項目を入力してください。');
       return false;
     }
-    const emailRegex = /^[\\s\\S]+@[\\s\\S]+\\.[\\s\\S]+$/;
-    if (!emailRegex.test(email)) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
       setFormError('有効なメールアドレスを入力してください。');
       return false;
     }
@@ -70,12 +72,43 @@ export default function RegisterPage() {
       return;
     }
 
-    const userData = {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      setFormError('Supabase URL or Anon Key is not defined in component.');
+      return;
+    }
+    console.log('DEBUG COMPONENT: NEXT_PUBLIC_SUPABASE_URL:', supabaseUrl);
+    console.log('DEBUG COMPONENT: NEXT_PUBLIC_SUPABASE_ANON_KEY:', supabaseAnonKey);
+
+    const supabase = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+
+    const userDataForSignUp = {
       user_name: userName,
       gender: gender || null,
     };
 
-    await signUp(email, password, userData);
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: userDataForSignUp,
+      },
+    });
+
+    if (signUpError) {
+      setFormError(`Component SignUp Error: ${signUpError.message}`);
+      return;
+    }
+
+    if (authData.user && authData.session) {
+      console.log('Component SignUp Success:', authData);
+    } else if (authData.user && !authData.session) {
+      setFormError('Component Sign up successful, but no session data returned.');
+    } else {
+      setFormError('Component Sign up successful, but no user data returned.');
+    }
   };
 
   return (
@@ -96,7 +129,10 @@ export default function RegisterPage() {
               id="email"
               name="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const target = e.target as HTMLInputElement;
+                setEmail(target.value);
+              }}
               required
             />
           </div>
@@ -108,7 +144,10 @@ export default function RegisterPage() {
               id="password"
               name="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const target = e.target as HTMLInputElement;
+                setPassword(target.value);
+              }}
               required
             />
           </div>
@@ -120,7 +159,10 @@ export default function RegisterPage() {
               id="passwordConfirm"
               name="passwordConfirm"
               value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const target = e.target as HTMLInputElement;
+                setPasswordConfirm(target.value);
+              }}
               required
             />
           </div>
@@ -132,7 +174,10 @@ export default function RegisterPage() {
               id="userName"
               name="userName"
               value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const target = e.target as HTMLInputElement;
+                setUserName(target.value);
+              }}
               required
             />
           </div>

@@ -35,16 +35,16 @@ steps:
     name: ".env.localの作成とSecrets設定"
     description: |
       - env_template.txtを.env.localにコピー
-      - Supabase管理画面から各種キー（SUPABASE_URL, ANON_KEY, SERVICE_ROLE_KEY, JWT_SECRET）を取得し、.env.localに記載
+      - Supabaseの**クラウドプロジェクト**管理画面から各種キー（NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_JWT_SECRET）を取得し、.env.localに記載
       - Vercel, GitHub Actions用のトークン/IDも必要に応じて設定
       - Secrets_Env_Guide.mdを参照
       - 旧appのdeploy.yml/ci.ymlのSecrets名（VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID）も考慮
       - ※ 本リポジトリは実装リポジトリです。必ずアプリ本体のpackage.json等が存在することを確認してください
   - id: 4
-    name: "Docker Composeによる初回起動"
+    name: "Docker ComposeによるNext.jsアプリ起動"
     description: |
-      - docker compose -f docker-compose.dev.yaml up -d --build で全サービスを初回起動
-      - DB: localhost:54322, ユーザ/パス: supabase
+      - `docker compose -f docker-compose.dev.yaml up -d --build` でNext.jsアプリケーションコンテナを起動
+      - `.env.local` に設定されたクラウドSupabase環境へ接続します。
       - package.json等が存在しない場合はDockerビルドでエラーになります。先に実装ファイルを追加してください
   - id: 5
     name: "アプリケーション起動"

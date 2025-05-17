@@ -17,7 +17,7 @@
 | 物理名     | 論理名           | データ型    | 必須 | デフォルト値       | 説明                                                   |
 | ---------- | ---------------- | ----------- | ---- | ------------------ | ------------------------------------------------------ |
 | id         | メンバーシップID | uuid        | Yes  | uuid_generate_v4() | プライマリキー                                         |
-| user_id    | ユーザーID       | uuid        | Yes  | なし               | usersテーブルの外部キー                                |
+| user_id    | ユーザーID       | uuid        | Yes  | なし               | D-01: users(public.users)テーブルの外部キー            |
 | wallet_id  | 家計簿ID         | uuid        | Yes  | なし               | walletsテーブルの外部キー                              |
 | role       | ロール           | varchar(20) | Yes  | 'general'          | 'admin'（管理ユーザー）または'general'（一般ユーザー） |
 | created_at | 作成日時         | timestamp   | Yes  | CURRENT_TIMESTAMP  | レコード作成日時                                       |
@@ -36,10 +36,10 @@
 
 - 一人のユーザーは一つの家計簿につき一つのメンバーシップのみ持つことができる
 - roleは'admin'または'general'のいずれかの値のみを取る（アプリケーション層でチェック）
-- 外部キー制約：user_id はusersテーブルの存在するidを参照
+- 外部キー制約：user_id はD-01: users(public.users)テーブルの存在するidを参照
 - 外部キー制約：wallet_id はwalletsテーブルの存在するidを参照
 
 ## 関連テーブル
 
-- users: メンバーの基本情報
+- users: メンバーの基本情報 (D-01: users(public.users)を参照)
 - wallets: 参加している家計簿の情報

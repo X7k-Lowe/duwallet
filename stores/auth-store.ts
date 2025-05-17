@@ -36,6 +36,8 @@ export const useAuthStore = create<AuthState>()(
       setError: (error) => set({ error }),
       clearAuth: () => set({ session: null, user: null, error: null, loading: false }),
       signUp: async (email, password, userData) => {
+        // console.log('DEBUG: NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+        // console.log('DEBUG: NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
         set({ loading: true, error: null });
         if (!supabaseUrl || !supabaseAnonKey) {
           set({ loading: false, error: 'Supabase URL or Anon Key is not defined.' });
