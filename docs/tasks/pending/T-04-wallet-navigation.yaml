@@ -1,0 +1,45 @@
+id: T-04-wallet-navigation
+name: "家計簿選択・作成・基本ナビゲーション実装 (S-03, S-04)"
+description: |
+  アクティブウォレットパターンの中心となる状態管理ストア、ミドルウェアによる画面遷移ロジックを実装。
+  家計簿選択画面(S-03)、家計簿作成画面(S-04)のUIと機能を実装し、関連テーブル(wallets, wallet_members)との連携を行う。
+status: pending
+depends_on: [T-03-authentication]
+outputs:
+  - "アクティブウォレットストア (wallet-store.ts) の実装 (docs/screens/アクティブウォレットパターン.md 準拠)"
+  - "ユーザー設定ストア (user-settings-store.ts) の実装 (docs/screens/アクティブウォレットパターン.md 準拠)"
+  - "middleware.ts によるアプリ起動時の自動遷移ロジック実装 (README, アクティブウォレットパターン.md 準拠)"
+  - "S-03 家計簿選択画面のUIと機能 (家計簿一覧表示、作成ボタン、参加申請フォーム、ユーザー設定、ログアウト)"
+  - "S-04 家計簿作成画面のUIと機能 (フォーム、作成処理)"
+  - "walletsテーブル (D-02) への家計簿データ保存処理"
+  - "wallet_membersテーブル (D-03) への作成ユーザーの管理者としての登録処理"
+  - "家計簿参加申請処理の基礎 (wallet_join_requestsテーブル (D-04) への保存)"
+steps:
+  - id: 1
+    name: "アクティブウォレットストア作成 (wallet-store.ts)"
+    description: "Zustandとpersistミドルウェアを使用し、選択中の家計簿ID/名称、ユーザーの所有する家計簿リストを管理。"
+  - id: 2
+    name: "ユーザー設定ストア作成 (user-settings-store.ts)"
+    description: "Zustandとpersistミドルウェアを使用し、複数家計簿参加設定 (isMultiWalletEnabled) を管理。"
+  - id: 3
+    name: "ミドルウェア実装 (middleware.ts)"
+    description: "Supabase Auth Helperと作成したストアの情報を元に、READMEおよびアクティブウォレットパターン.md記載の自動画面遷移ロジックを実装。"
+  - id: 4
+    name: "S-03 家計簿選択画面 UI実装"
+    description: "S-03_wallet_select.yamlに基づき、参加中家計簿リスト、参加コード入力フォーム、家計簿作成ボタン、ユーザー設定ボタン、ログアウトボタン等を実装。"
+  - id: 5
+    name: "S-03 家計簿選択画面 機能実装"
+    description: "家計簿選択時のアクティブウォレット設定、家計簿参加申請処理 (wallet_join_requestsテーブルへのレコード作成) を実装。"
+  - id: 6
+    name: "S-04 家計簿作成画面 UI実装"
+    description: "S-04_wallet_create.yamlに基づき、家計簿名、参加申請受付、参加コード設定等のフォームを実装。"
+  - id: 7
+    name: "S-04 家計簿作成画面 機能実装"
+    description: "入力に基づきwalletsテーブルに新規家計簿レコードを作成。作成者を管理ユーザーとしてwallet_membersテーブルに登録。作成後、アクティブウォレットとして設定し家計簿ホーム画面へ遷移。"
+  - id: 8
+    name: "S-05 家計簿ホーム画面 骨子実装"
+    description: "`/wallet` パスでアクセス可能なS-05 家計簿ホーム画面の基本的なレイアウトと、アクティブな家計簿名を表示するヘッダー等の骨子を実装。"
+created_at: 2025-05-17T10:05:00+09:00
+updated_at: 2025-05-17T10:05:00+09:00
+logs:
+  - "2025-05-17: タスクファイル作成" 

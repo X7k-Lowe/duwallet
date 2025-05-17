@@ -13,25 +13,27 @@ services:
       - ./:/app
     ports:
       - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-    depends_on:
-      - supabase-db
+    env_file:
+      - .env.local
 
-  supabase-db:
-    image: supabase/postgres:15.1.0.63
-    container_name: supabase-db
-    restart: unless-stopped
-    ports:
-      - "54322:5432"
-    environment:
-      POSTGRES_PASSWORD: supabase
-      POSTGRES_USER: supabase
-      POSTGRES_DB: supabase
-    volumes:
-      - supabase_data:/var/lib/postgresql/data
+# ローカルDBサービスは使用しないので全体を削除
+#  db:
+#    container_name: duwallet-db
+#    image: supabase/postgres:15.1.0.118
+#    ports:
+#      - "54322:5432"
+#    environment:
+#      POSTGRES_USER: supabase
+#      POSTGRES_PASSWORD: ${SUPABASE_DB_PASSWORD:-your_secure_password}
+#      POSTGRES_DB: postgres
+#    volumes:
+#      - supabase_data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U supabase -d postgres"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
 
-volumes:
-  supabase_data: 
+# ローカルDBボリュームは使用しないので削除
+# volumes:
+#  supabase_data: 

@@ -1,0 +1,46 @@
+id: T-06-income-expense-crud
+name: "月次収支登録画面 (S-06) 実装"
+description: |
+  月次収支登録画面 (S-06) のUIと機能（収支の登録、一覧表示、編集、削除）を実装する。
+  ユーザー別タブと共通収支タブを設け、それぞれの収支を管理できるようにする。
+  データは income_expenses テーブル (D-05) と連携する。
+status: pending
+depends_on: [T-05-wallet-home]
+outputs:
+  - "S-06 月次収支登録画面の完成されたUI（S-06_monthly_income_expense.yaml 準拠）"
+  - "ユーザー別収支の登録・一覧・編集・削除機能"
+  - "共通収支の登録・一覧・編集・削除機能"
+  - "動的なフォーム項目追加機能（収入・支出それぞれ）"
+  - "収支の日付選択、金額入力、説明入力、次月以降自動追加設定機能"
+  - "入力バリデーション（金額が0以上など）"
+  - "income_expenses テーブル (D-05) へのCRUD操作ロジック"
+  - "hooks/use-income-expenses.ts (収支データ取得・操作フック) の実装または更新"
+steps:
+  - id: 1
+    name: "S-06 UIレイアウト実装"
+    description: "S-06_monthly_income_expense.yaml に基づき、ヘッダー（画面タイトル、対象月）、ユーザー別タブ、共通収支タブ、収支一覧表示エリア、収支登録フォーム、保存・キャンセルボタンの基本レイアウトを実装。"
+  - id: 2
+    name: "収支一覧表示機能実装"
+    description: "選択されたユーザー（または共通）および対象月の収支データを income_expenses テーブルから取得し、一覧表示する。編集・削除ボタンも表示。"
+  - id: 3
+    name: "収支登録フォーム実装"
+    description: "S-06_monthly_income_expense.yaml のフォーム定義に基づき、収入・支出それぞれの登録フォームを実装。日付、項目、金額、自動追加設定チェックボックスを含む。動的に項目追加できる機能も実装。"
+  - id: 4
+    name: "収支登録処理実装"
+    description: "フォーム入力内容を income_expenses テーブルに保存する処理を実装。is_common, is_income フラグを適切に設定。"
+  - id: 5
+    name: "収支編集機能実装"
+    description: "既存の収支項目を選択し、フォームで編集後、income_expenses テーブルの該当レコードを更新する機能を実装。"
+  - id: 6
+    name: "収支削除機能実装"
+    description: "既存の収支項目を削除する機能（確認ダイアログ付き）を実装し、income_expenses テーブルから該当レコードを削除。"
+  - id: 7
+    name: "入力バリデーション実装"
+    description: "金額が0以上であることなど、適切な入力バリデーションを実装。"
+  - id: 8
+    name: "hooks/use-income-expenses.ts 実装/更新"
+    description: "収支データの取得、追加、更新、削除を行うためのカスタムフックを作成または更新。アクティブウォレットIDと対象月を考慮する。"
+created_at: 2025-05-17T10:15:00+09:00
+updated_at: 2025-05-17T10:15:00+09:00
+logs:
+  - "2025-05-17: タスクファイル作成" 

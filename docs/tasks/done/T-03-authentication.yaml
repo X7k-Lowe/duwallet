@@ -1,0 +1,59 @@
+id: T-03-authentication
+name: "ユーザー認証機能の実装 (S-01, S-02)"
+description: |
+  ログイン、新規登録、認証状態管理、関連する画面UIの実装。
+  Supabase Authを利用し、usersテーブルへのデータ永続化も行う。
+status: "done" # タスク完了
+depends_on: [T-02-sync-project-structure]
+outputs:
+  - "S-01 タイトル画面のUIコンポーネント（ログインフォーム、新規登録リンク）"
+  - "S-02 ユーザー登録画面のUIコンポーネント"
+  - "Supabase Auth を利用したログイン処理 (Eメール、パスワード、MFA基礎)"
+  - "Supabase Auth を利用したユーザー登録処理 (usersテーブルへの保存含む)"
+  - "入力バリデーションロジック (メール形式、パスワード強度)"
+  - "認証状態管理ストア (auth-store.ts)"
+  - "認証後の画面遷移ロジックの一部（S-01のinitialization準拠）"
+steps:
+  - id: 1
+    name: "認証関連ストア作成 (auth-store.ts)"
+    status: "done"
+    description: "Zustandを使用し、ユーザーセッションや認証状態を管理するストアを作成。"
+  - id: 2
+    name: "S-01 タイトル画面 UI実装"
+    status: "done"
+    description: "S-01_title.yamlに基づき、ログインフォームと新規ユーザー登録へのリンクを含むUIを実装。"
+  - id: 3
+    name: "S-02 ユーザー登録画面 UI実装"
+    status: "done"
+    description: "S-02_user_register.yamlに基づき、ユーザー情報入力フォームを含むUIを実装。"
+  - id: 4
+    name: "新規ユーザー登録処理実装"
+    status: "done"
+    description: "Supabase Auth SDKを使用し、Eメールとパスワードでユーザーを新規登録。成功後、usersテーブル(D-01)にユーザー情報を保存。当初クライアントサイドで実装したが、RLSの問題でSupabase Function (sync_public_user) と Database Webhook (Auth User Sync) によるサーバーサイド同期に変更。"
+  - id: 5
+    name: "ログイン処理実装"
+    status: "done"
+    description: "Supabase Auth SDKを使用し、Eメールとパスワードでログイン処理を実装。MFAの基礎的な連携も考慮。"
+  - id: 6
+    name: "入力バリデーション実装"
+    status: "done"
+    description: "Eメールの形式、パスワードの最低文字数・複雑性などのバリデーションを実装。"
+  - id: 7
+    name: "認証後のリダイレクト処理 (基本部分)"
+    status: "done"
+    description: "ログイン・新規登録成功後、適切な画面へリダイレクトするロジックの基礎を実装（詳細はT-04で強化）。"
+  - id: 8
+    name: "新規登録後のセッション取得失敗の修正"
+    status: "done"
+    description: "新規ユーザー登録後、クライアントサイドでセッションが正しく取得・維持されない問題を修正する。stores/auth-store.ts の signUp 処理、および onAuthStateChange によるセッション監視ロジックを確認・修正する。"
+  - id: 9
+    name: "Vercelデプロイ時コンパイルエラーの調査と修正"
+    status: "done" # 修正完了
+    description: "Vercelでのデプロイ時に発生する 'Parsing error: The keyword ''import'' is reserved' というコンパイルエラーおよびSupabaseクライアント初期化エラーを調査し修正した。"
+created_at: 2025-05-17T10:00:00+09:00
+updated_at: "2025-05-18T00:14:55+09:00"
+logs:
+  - "2025-05-17: タスクファイル作成。認証ストア、UI実装、各種処理実装。"
+  - "2025-05-17: 新規登録後のセッション取得問題を特定し、修正完了。 (旧ステップ8)"
+  - "2025-05-17: Vercelデプロイ時のESLintパースエラーおよび環境変数エラーを特定し、修正完了。 (旧ステップ9)"
+  - "2025-05-18: 全ステップ完了。タスクステータスをdoneに更新。" 

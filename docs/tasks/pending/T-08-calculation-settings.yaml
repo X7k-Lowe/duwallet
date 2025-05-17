@@ -1,0 +1,51 @@
+id: T-08-calculation-settings
+name: "支払額算出設定画面 (S-08) 実装"
+description: |
+  支払額算出設定画面 (S-08) のUIと機能を実装する。
+  算出方法（収入割合方式/残金均一方式）の選択、収入参照月選択、切上げ桁設定、支払率微調整機能を提供する。
+  設定に基づきユーザー別の支払額・支払率を算出し表示する。
+  データは calculation_settings (D-07) および payment_rate_adjustments (D-08) テーブルと連携する。
+status: pending
+depends_on: [T-06-income-expense-crud, T-07-payment-destination-crud]
+outputs:
+  - "S-08 支払額算出設定画面の完成されたUI（S-08_calculation_settings.yaml 準拠）"
+  - "算出方法選択機能（収入割合方式/残金均一方式）"
+  - "収入参照月選択機能（今月/前月）"
+  - "切上げ桁設定機能"
+  - "ユーザー別支払率微調整機能（スライダーUIなど）"
+  - "設定に基づいたユーザー別支払額・支払率の表示機能"
+  - "支払額算出ロジックの実装 (lib/utils/money.ts や hooks/use-calculations.ts に集約)"
+  - "calculation_settings, payment_rate_adjustments テーブルへの設定保存・読込処理"
+  - "hooks/use-calculations.ts (計算設定データ・算出ロジックフック) の実装または更新"
+steps:
+  - id: 1
+    name: "S-08 UIレイアウト実装"
+    description: "S-08_calculation_settings.yaml に基づき、ヘッダー、算出方法選択、収入参照月選択、切上げ桁設定、支払率微調整、算出結果表示セクションの基本レイアウトを実装。"
+  - id: 2
+    name: "計算設定読込・表示機能実装"
+    description: "アクティブな家計簿の calculation_settings および payment_rate_adjustments テーブルから既存の設定を読み込み、フォームに表示する。"
+  - id: 3
+    name: "算出方法・収入参照月・切上げ桁 設定機能実装"
+    description: "ユーザーが選択した算出方法、収入参照月、切上げ桁を calculation_settings テーブルに保存する処理を実装。"
+  - id: 4
+    name: "支払率微調整機能実装"
+    description: "S-08_calculation_settings.yaml の slider 等のUIでユーザー別の支払率調整値を入力させ、payment_rate_adjustments テーブルに保存する処理を実装。"
+  - id: 5
+    name: "支払額算出ロジック実装"
+    description: "README記載の「収入割合方式」「残金均一方式」のロジック、および支払率調整、切上げ処理を実装。収支データ (income_expenses) を参照する。lib/utils/money.ts や hooks/use-calculations.ts に主要ロジックを配置。"
+  - id: 6
+    name: "算出結果表示機能実装"
+    description: "実装した算出ロジックに基づき、ユーザー別の支払額と最終的な支払率を画面にリアルタイムで表示する。設定変更の都度、再計算して表示を更新。"
+  - id: 7
+    name: "設定保存機能実装"
+    description: "画面上の全ての設定内容を calculation_settings および payment_rate_adjustments テーブルに一括で保存する機能を実装。"
+  - id: 8
+    name: "hooks/use-calculations.ts 実装/更新"
+    description: "計算設定データの取得・保存、および支払額算出ロジックの呼び出し等を行うカスタムフックを作成または更新。"
+  - id: 9
+    name: "ホーム画面 (S-05) への支払額・支払率データ連携"
+    description: "本タスクで算出したユーザー別支払額と支払率を、T-05 の step 5 で家計簿ホーム画面に表示できるようにデータ連携の仕組みを整備する。"
+created_at: 2025-05-17T10:25:00+09:00
+updated_at: 2025-05-17T10:25:00+09:00
+logs:
+  - "2025-05-17: タスクファイル作成" 
