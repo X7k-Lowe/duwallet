@@ -59,5 +59,8 @@ Supabaseによる認証機能を有効にすると自動的に作成されるテ
 - wallet_join_requests: ユーザーの家計簿参加申請を管理
 
 ### 備考
-- ユーザーが新規登録 (Supabase Authの`signUp`) されると、`auth.users` にレコードが作成されます。その後、この `public.users` テーブルにも対応するレコードが作成されるように、データベーストリガーまたはアプリケーション側のロジックで処理を実装する必要があります。Eメールアドレスは `auth.users` に格納されているため、`public.users` には不要です。
+- ユーザーが新規登録 (Supabase Authの`signUp`) されると、`auth.users` にレコードが作成されます。この `auth.users` テーブルへのレコード挿入をトリガーとして、Supabase Functionが自動的に呼び出され、`public.users` テーブルに対応するレコードが作成されます。
+  - `signUp`時にクライアントから渡されるメタデータ（ユーザー名、性別、複数家計簿参加設定など）は `auth.users` の `raw_user_meta_data` フィールドに一時的に保存され、Functionがこれを読み取って `public.users` の各カラムにコピーします。
+  - これにより、`public.users` へのレコード作成はサーバーサイドで確実に行われます。
+- Eメールアドレスは `auth.users` に格納されているため、`public.users` には不要です。
 - ユーザーがメールアドレスを変更する場合 (例: `S-11_user_settings.yaml`経由)、Supabase Auth API (`supabase.auth.updateUser({ email: newEmail })`) を使用して `auth.users.email` を更新します。`public.users` にはEメールカラムが存在しないため、同期は不要です。

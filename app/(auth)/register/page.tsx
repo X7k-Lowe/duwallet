@@ -8,8 +8,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import React, { useState, useEffect } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
-import { Database } from '@/types/supabase';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -72,43 +70,11 @@ export default function RegisterPage() {
       return;
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      setFormError('Supabase URL or Anon Key is not defined in component.');
-      return;
-    }
-    console.log('DEBUG COMPONENT: NEXT_PUBLIC_SUPABASE_URL:', supabaseUrl);
-    console.log('DEBUG COMPONENT: NEXT_PUBLIC_SUPABASE_ANON_KEY:', supabaseAnonKey);
-
-    const supabase = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
-
-    const userDataForSignUp = {
+    await signUp(email, password, {
       user_name: userName,
       gender: gender || null,
-    };
-
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: userDataForSignUp,
-      },
+      multiple_wallets: multipleWallets === 'true',
     });
-
-    if (signUpError) {
-      setFormError(`Component SignUp Error: ${signUpError.message}`);
-      return;
-    }
-
-    if (authData.user && authData.session) {
-      console.log('Component SignUp Success:', authData);
-    } else if (authData.user && !authData.session) {
-      setFormError('Component Sign up successful, but no session data returned.');
-    } else {
-      setFormError('Component Sign up successful, but no user data returned.');
-    }
   };
 
   return (
