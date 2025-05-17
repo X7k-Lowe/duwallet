@@ -52,7 +52,8 @@
 - id: T-04-wallet-navigation
   name: "家計簿選択・作成・基本ナビゲーション実装 (S-03, S-04)"
   description: "アクティブウォレットパターン、ミドルウェアによる画面遷移、家計簿選択・作成画面、ストアの実装。"
-  status: pending
+  status: done
+  file_path: "docs/tasks/done/T-04-wallet-navigation.yaml"
   depends_on: [T-03-authentication]
   outputs:
     - "アクティブウォレットストア (wallet-store.ts)"
@@ -62,9 +63,12 @@
     - "S-04 家計簿作成画面 UIと機能"
     - "wallets, wallet_members テーブルへのデータ保存処理"
   created_at: 2025-05-17T10:05:00+09:00
-  updated_at: 2025-05-17T10:05:00+09:00
+  updated_at: 2025-05-18T03:10:00+09:00
   logs:
     - "2025-05-17: タスク登録"
+    - "2025-05-18T14:00:00+09:00: タスク開始。ブランチ feature/T-04-wallet-navigation を作成。"
+    - "2025-05-18T18:00:00+09:00: 主要な画面機能とストア実装完了。"
+    - "2025-05-18T03:10:00+09:00: RLSポリシーの無限再帰エラーを解決し、関連ドキュメントを更新。タスク完了。"
 
 - id: T-05-wallet-home
   name: "家計簿ホーム画面 (S-05) 詳細機能実装"
