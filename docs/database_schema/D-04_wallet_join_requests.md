@@ -44,6 +44,52 @@
 - 外部キー制約：wallet_id はwalletsテーブルの存在するidを参照
 - 外部キー制約：processed_by がnullでない場合、D-01: users(public.users)テーブルの存在するidを参照
 
+## 行レベルセキュリティ (RLS) ポリシー
+
+- **SELECT (閲覧 - 自身の申請):** 認証ユーザーは自身の参加申請のみを閲覧できる。
+  ```sql
+  (auth.uid() = user_id)
+  ```
+- **SELECT (閲覧 - ウォレット管理者):** ウォレットの作成者 (wallets.created_by_user_id が認証ユーザーのIDと一致) は、そのウォレットへの全ての参加申請を閲覧できる。
+  ```sql
+  EXISTS (
+    SELECT 1
+    FROM wallets w
+    WHERE (
+      w.id = wallet_join_requests.wallet_id AND
+      w.created_by_user_id = auth.uid()
+    )
+  )
+  ```
+- **INSERT (作成):** 認証されたユーザーは新しい参加申請を作成できる。
+  ```sql
+  (auth.uid() = user_id) -- 基本的な制約、さらにアプリケーション側で参加コードの検証などが必要
+  ```
+- **UPDATE (更新 - ウォレット管理者):** ウォレットの作成者のみが参加申請のステータスを更新（承認/却下）できる。
+  - `USING` 句 (どの行を更新できるか):
+    ```sql
+    EXISTS (
+      SELECT 1
+      FROM wallets w
+      WHERE (
+        w.id = wallet_join_requests.wallet_id AND
+        w.created_by_user_id = auth.uid()
+      )
+    )
+    ```
+  - `WITH CHECK` 句 (更新後の行が満たすべき条件):
+    ```sql
+    EXISTS (
+      SELECT 1
+      FROM wallets w
+      WHERE (
+        w.id = wallet_join_requests.wallet_id AND
+        w.created_by_user_id = auth.uid()
+      )
+    ) AND (processed_by = auth.uid()) -- 処理者が認証ユーザーであることを保証
+    ```
+- **DELETE (削除):** 通常、参加申請は削除せずステータスで管理する。もし削除を許可する場合、申請者本人またはウォレット管理者に制限することが考えられる。
+
 ## 関連テーブル
 
 - users: 申請者の情報と処理者の情報 (D-01: users(public.users)を参照)

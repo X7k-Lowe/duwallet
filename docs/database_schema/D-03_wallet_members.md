@@ -39,6 +39,51 @@
 - 外部キー制約：user_id はD-01: users(public.users)テーブルの存在するidを参照
 - 外部キー制約：wallet_id はwalletsテーブルの存在するidを参照
 
+## 行レベルセキュリティ (RLS) ポリシー
+
+- **SELECT (閲覧 - 自身のメンバーシップ):** 認証ユーザーは自身のメンバーシップ情報のみを閲覧できる。
+  ```sql
+  (auth.uid() = user_id)
+  ```
+- **SELECT (閲覧 - ウォレット管理者):** ウォレットの作成者 (wallets.created_by_user_id が認証ユーザーのIDと一致) は、そのウォレットの全てのメンバー情報を閲覧できる。
+  ```sql
+  EXISTS (
+    SELECT 1
+    FROM wallets w
+    WHERE (
+      w.id = wallet_members.wallet_id AND
+      w.created_by_user_id = auth.uid()
+    )
+  )
+  ```
+- **INSERT (作成):** 認証されたユーザーは、特定の条件下（例：家計簿作成時、招待承認時など、アプリケーションロジックで制御）でメンバーシップを作成できる。
+- **UPDATE (更新):** メンバー自身が自身のロールを更新できる (例: 'general' のみ)、またはウォレット管理者がメンバーのロールを更新できる (推奨)。
+  - 自身の更新 (例: role の変更は制限されるべき): `(auth.uid() = user_id)`
+  - 管理者による更新: 
+    ```sql
+    EXISTS (
+      SELECT 1
+      FROM wallets w
+      WHERE (
+        w.id = wallet_members.wallet_id AND
+        w.created_by_user_id = auth.uid()
+      )
+    )
+    ```
+- **DELETE (削除):** メンバー自身が脱退できる、またはウォレット管理者がメンバーを削除できる (推奨)。
+  - 自身の削除: `(auth.uid() = user_id)`
+  - 管理者による削除:
+    ```sql
+    EXISTS (
+      SELECT 1
+      FROM wallets w
+      WHERE (
+        w.id = wallet_members.wallet_id AND
+        w.created_by_user_id = auth.uid()
+      )
+    )
+    ```
+
 ## 関連テーブル
 
 - users: メンバーの基本情報 (D-01: users(public.users)を参照)
