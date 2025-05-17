@@ -19,6 +19,7 @@ Supabaseによる認証機能を有効にすると自動的に作成されるテ
 ## 2. `public.users` テーブル (カスタム)
 
 アプリケーション固有のユーザープロフィール情報や設定を管理するテーブルです。`auth.users.id` を外部キーとして参照し、認証情報とプロフィール情報を紐付けます。
+ユーザーのEメールアドレスは `auth.users.email` を参照します。
 
 ### テーブル仕様
 
@@ -35,7 +36,6 @@ Supabaseによる認証機能を有効にすると自動的に作成されるテ
 | 物理名              | 論理名           | データ型          | 必須  | デフォルト値      | 説明                                                                                                |
 |---------------------|------------------|-------------------|-------|-------------------|-----------------------------------------------------------------------------------------------------|
 | id                  | ユーザーID       | uuid              | Yes   | なし              | プライマリキー。Supabaseの `auth.users.id` を参照する外部キー。                                       |
-| email               | Eメール          | varchar(255)      | Yes   | なし              | ユーザーのメールアドレス。`auth.users.email` と同期。`S-11_user_settings`での変更時は `auth.users` を更新後、こちらにも反映。 |
 | name                | 名前              | varchar(100)      | Yes   | なし              | ユーザー表示名                                                                                      |
 | gender              | 性別              | varchar(10)       | No    | null              | 性別（male/female/other）                                                                            |
 | multiple_wallets    | 複数家計簿参加設定 | boolean          | Yes   | false             | 複数家計簿に参加するか（true）、一つのみか（false）                                                              |
@@ -47,12 +47,11 @@ Supabaseによる認証機能を有効にすると自動的に作成されるテ
 | インデックス名      | カラム            | 種類              | 説明                                                              |
 |---------------------|-------------------|-------------------|-------------------------------------------------------------------|
 | users_pkey          | id                | PRIMARY KEY       | プライマリキー                                                    |
-| users_email_key     | email             | UNIQUE            | メールアドレスの一意性を保証 (`auth.users`側でも一意性が担保される) |
 
 ### 制約
 
 - `id` は `auth.users` テーブルに存在する `id` を参照すること。
-- `email` は `auth.users.email` と整合性が保たれること（DBトリガーやアプリケーションロジックで同期を推奨）。
+- Eメールアドレスに関する操作 (新規登録時の設定、変更など) は `supabase.auth` API を通じて `auth.users` テーブルに対して行い、`public.users` にはEメール情報を保持しません。アプリケーションからは `auth.users.email` を参照してください。
 
 ### 関連テーブル
 
@@ -60,5 +59,5 @@ Supabaseによる認証機能を有効にすると自動的に作成されるテ
 - wallet_join_requests: ユーザーの家計簿参加申請を管理
 
 ### 備考
-- ユーザーが新規登録 (Supabase Authの`signUp`) されると、`auth.users` にレコードが作成されます。その後、この `public.users` テーブルにも対応するレコードが作成されるように、データベーストリガーまたはアプリケーション側のロジックで処理を実装する必要があります。
-- ユーザーがメールアドレスを変更する場合 (例: `S-11_user_settings.yaml`経由)、Supabase Auth API (`supabase.auth.updateUser({ email: newEmail })`) を使用して `auth.users.email` を更新します。その変更が成功した後、`public.users.email` も同期して更新する必要があります。この同期はDBトリガーで行うのが望ましいです。
+- ユーザーが新規登録 (Supabase Authの`signUp`) されると、`auth.users` にレコードが作成されます。その後、この `public.users` テーブルにも対応するレコードが作成されるように、データベーストリガーまたはアプリケーション側のロジックで処理を実装する必要があります。Eメールアドレスは `auth.users` に格納されているため、`public.users` には不要です。
+- ユーザーがメールアドレスを変更する場合 (例: `S-11_user_settings.yaml`経由)、Supabase Auth API (`supabase.auth.updateUser({ email: newEmail })`) を使用して `auth.users.email` を更新します。`public.users` にはEメールカラムが存在しないため、同期は不要です。
