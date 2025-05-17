@@ -1,0 +1,45 @@
+id: T-04-wallet-navigation
+name: "家計簿選択・作成・基本ナビゲーション実装 (S-03, S-04)"
+description: "アクティブウォレットパターン、ミドルウェアによる画面遷移、家計簿選択・作成画面、ストアの実装。"
+status: done
+depends_on: [T-03-authentication]
+outputs:
+  - "アクティブウォレットストア (wallet-store.ts)"
+  - "ユーザー設定ストア (user-settings-store.ts)"
+  - "middleware.ts による自動遷移ロジック"
+  - "S-03 家計簿選択画面 UIと機能"
+  - "S-04 家計簿作成画面 UIと機能"
+  - "wallets, wallet_members テーブルへのデータ保存処理"
+created_at: 2025-05-17T10:05:00+09:00
+updated_at: 2025-05-18T03:10:00+09:00
+started_at: 2025-05-18T14:00:00+09:00 # 元の開始時刻を維持
+ended_at: 2025-05-18T03:10:00+09:00
+assignee: AI Agent
+story_points: 8 # 仮
+sub_tasks:
+  - id: T-04-01
+    name: "アクティブウォレットストア (wallet-store.ts) の実装"
+    status: done
+  - id: T-04-02
+    name: "ユーザー設定ストア (user-settings-store.ts) の実装"
+    status: done
+  - id: T-04-03
+    name: "middleware.ts の自動遷移ロジック調整・強化"
+    status: done
+  - id: T-04-04
+    name: "S-03 家計簿選択画面のUIと機能実装"
+    status: done
+  - id: T-04-05
+    name: "S-04 家計簿作成画面のUIと機能実装"
+    status: done
+  - id: T-04-06
+    name: "wallets, wallet_members テーブルへのデータ保存処理実装"
+    status: done
+  - id: T-04-07
+    name: "RLSポリシーのデバッグと修正、関連ドキュメント更新"
+    status: done
+logs:
+  - "2025-05-17: タスク登録"
+  - "2025-05-18T14:00:00+09:00: タスク開始。ブランチ feature/T-04-wallet-navigation を作成。"
+  - "2025-05-18T18:00:00+09:00: 主要な画面機能とストア実装完了。"
+  - "2025-05-18T03:10:00+09:00: RLSポリシーの無限再帰エラーを解決。関連するDBスキーマドキュメントのRLSポリシーセクションを更新。タスク完了。" 

@@ -5,17 +5,17 @@ import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
-  {
-    ignores: [
-      "*.config.js",
-      "*.config.mjs",
-      ".next/*",
-      "node_modules/*",
-      "public/*",
-      "docs/*",
-      "supabase/functions/**", // Denoのコードは別途deno lintで (重要: _sharedも含む)
-    ],
-  },
+  // {
+  //   ignores: [
+  //     "*.config.js",
+  //     "*.config.mjs",
+  //     ".next/*",
+  //     "node_modules/*",
+  //     "public/*",
+  //     "docs/*",
+  //     "supabase/functions/**", // Denoのコードは別途deno lintで (重要: _sharedも含む)
+  //   ],
+  // },
   {
     files: ["app/**/*.{ts,tsx,js,jsx}", "components/**/*.{ts,tsx,js,jsx}", "lib/**/*.{ts,tsx,js,jsx}", "hooks/**/*.{ts,tsx,js,jsx}", "stores/**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
