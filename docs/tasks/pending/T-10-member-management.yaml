@@ -1,0 +1,51 @@
+id: T-10-member-management
+name: "参加ユーザー管理画面 (S-10) 実装"
+description: |
+  家計簿の参加ユーザー管理画面 (S-10) のUIと機能を実装する。
+  参加ユーザーの一覧表示、ロール変更、家計簿からの削除機能を提供する。
+  また、参加申請中のユーザー一覧表示、申請の承認・却下機能も実装する（管理ユーザーのみ操作可能）。
+  データは wallet_members (D-03) および wallet_join_requests (D-04) テーブルと連携する。
+status: pending
+depends_on: [T-05-wallet-home]
+outputs:
+  - "S-10 参加ユーザー管理画面の完成されたUI（S-10_member_management.yaml 準拠）"
+  - "参加ユーザー一覧（名前、Eメール、ロール）表示機能"
+  - "参加ユーザーのロール変更機能（管理ユーザー/一般ユーザー、管理ユーザーのみ操作可能）"
+  - "参加ユーザーの家計簿からの削除機能（管理ユーザーのみ操作可能、自分自身は削除不可）"
+  - "参加申請中ユーザー一覧（名前、Eメール、申請日）表示機能"
+  - "参加申請の承認機能（承認後、wallet_members に一般ユーザーとして追加、wallet_join_requests のステータス更新）"
+  - "参加申請の却下機能（wallet_join_requests のステータス更新）"
+  - "wallet_members, wallet_join_requests テーブルへのデータ操作ロジック"
+  - "hooks/use-members.ts (メンバー管理データ取得・操作フック) の実装または更新"
+steps:
+  - id: 1
+    name: "S-10 UIレイアウト実装"
+    description: "S-10_member_management.yaml に基づき、ヘッダー、参加ユーザー一覧セクション、参加申請一覧セクション（条件付き表示）、戻るボタンの基本レイアウトを実装。"
+  - id: 2
+    name: "参加ユーザー一覧表示機能実装"
+    description: "アクティブな家計簿の wallet_members テーブルから参加ユーザー情報を取得し、名前、Eメール、ロール（バッジ表示）を一覧表示。ロール変更用セレクトボックス、削除ボタンも表示（権限に応じて有効/無効化）。"
+  - id: 3
+    name: "ユーザーロール変更機能実装"
+    description: "管理ユーザーが他の参加ユーザーのロールを変更できる機能を実装。変更内容は wallet_members テーブルに保存。現在のユーザーが自分自身のロールを変更できないように制御。"
+  - id: 4
+    name: "参加ユーザー削除機能実装"
+    description: "管理ユーザーが他の参加ユーザーを家計簿から削除できる機能（確認ダイアログ付き）を実装。wallet_members テーブルから該当レコードを削除。現在のユーザーが自分自身を削除できないように制御。"
+  - id: 5
+    name: "参加申請一覧表示機能実装"
+    description: "アクティブな家計簿への参加申請を wallet_join_requests テーブル (status='pending') から取得し、申請者名、Eメール、申請日を一覧表示。承認・却下ボタンも表示（管理ユーザーのみ）。"
+  - id: 6
+    name: "参加申請承認処理実装"
+    description: "管理ユーザーが参加申請を承認する機能を実装。承認されたユーザーを wallet_members に一般ユーザーとして追加し、wallet_join_requests の該当レコードの status を 'approved' に更新、processed_by と processed_at も記録。"
+  - id: 7
+    name: "参加申請却下処理実装"
+    description: "管理ユーザーが参加申請を却下する機能を実装。wallet_join_requests の該当レコードの status を 'rejected' に更新、processed_by と processed_at も記録。"
+  - id: 8
+    name: "権限制御実装"
+    description: "ロール変更、ユーザー削除、申請承認/却下機能について、操作ユーザーが管理ユーザーである場合にのみ実行可能とする権限制御を実装。"
+  - id: 9
+    name: "hooks/use-members.ts 実装/更新"
+    description: "参加ユーザーおよび参加申請データの取得・更新・削除を行うためのカスタムフックを作成または更新。"
+created_at: 2025-05-17T10:35:00+09:00
+updated_at: 2025-05-17T10:35:00+09:00
+logs:
+  - "2025-05-17: タスクファイル作成" 

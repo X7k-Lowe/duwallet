@@ -34,3 +34,155 @@
   logs:
     - 2025-05-16: タスク登録
     - 2025-05-16: タスク完了・done/へ移動
+
+- id: T-03-authentication
+  name: "ユーザー認証機能の実装 (S-01, S-02)"
+  description: "ログイン、新規登録、認証状態管理、関連する画面UIの実装。"
+  status: pending
+  depends_on: [T-02-sync-project-structure]
+  outputs:
+    - "S-01 タイトル画面 UIとログイン機能"
+    - "S-02 ユーザー登録画面 UIと登録機能"
+    - "認証状態管理ストア (auth-store.ts)"
+    - "usersテーブルへのデータ保存処理"
+  created_at: 2025-05-17T10:00:00+09:00
+  updated_at: 2025-05-17T10:00:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-04-wallet-navigation
+  name: "家計簿選択・作成・基本ナビゲーション実装 (S-03, S-04)"
+  description: "アクティブウォレットパターン、ミドルウェアによる画面遷移、家計簿選択・作成画面、ストアの実装。"
+  status: pending
+  depends_on: [T-03-authentication]
+  outputs:
+    - "アクティブウォレットストア (wallet-store.ts)"
+    - "ユーザー設定ストア (user-settings-store.ts)"
+    - "middleware.ts による自動遷移ロジック"
+    - "S-03 家計簿選択画面 UIと機能"
+    - "S-04 家計簿作成画面 UIと機能"
+    - "wallets, wallet_members テーブルへのデータ保存処理"
+  created_at: 2025-05-17T10:05:00+09:00
+  updated_at: 2025-05-17T10:05:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-05-wallet-home
+  name: "家計簿ホーム画面 (S-05) 詳細機能実装"
+  description: "家計簿ホーム画面のサマリー表示、月移動、サイドバーメニュー等の実装。"
+  status: pending
+  depends_on: [T-04-wallet-navigation]
+  outputs:
+    - "S-05 家計簿ホーム画面 UI（サマリー、月移動、メニュー）"
+    - "収支サマリーデータ取得ロジック (income_expensesテーブル連携)"
+  created_at: 2025-05-17T10:10:00+09:00
+  updated_at: 2025-05-17T10:10:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-06-income-expense-crud
+  name: "月次収支登録画面 (S-06) 実装"
+  description: "収支の登録・一覧表示・編集・削除機能、関連UIの実装。"
+  status: pending
+  depends_on: [T-05-wallet-home]
+  outputs:
+    - "S-06 月次収支登録画面 UIとCRUD機能"
+    - "income_expenses テーブルへのデータ操作処理"
+  created_at: 2025-05-17T10:15:00+09:00
+  updated_at: 2025-05-17T10:15:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-07-payment-destination-crud
+  name: "支払先登録画面 (S-07) 実装"
+  description: "支払先の登録・一覧表示・編集・削除機能、関連UIの実装。"
+  status: pending
+  depends_on: [T-05-wallet-home]
+  outputs:
+    - "S-07 支払先登録画面 UIとCRUD機能"
+    - "payment_destinations テーブルへのデータ操作処理"
+  created_at: 2025-05-17T10:20:00+09:00
+  updated_at: 2025-05-17T10:20:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-08-calculation-settings
+  name: "支払額算出設定画面 (S-08) 実装"
+  description: "支払額の算出方法設定、支払率調整、算出ロジック、関連UIの実装。"
+  status: pending
+  depends_on: [T-06-income-expense-crud, T-07-payment-destination-crud] # 収支と支払先データが必要
+  outputs:
+    - "S-08 支払額算出設定画面 UIと機能"
+    - "支払額算出ロジック (lib/utils/money.ts等)"
+    - "calculation_settings, payment_rate_adjustments テーブルへのデータ保存処理"
+    - "T-05 家計簿ホーム画面への支払額・支払率の連携"
+  created_at: 2025-05-17T10:25:00+09:00
+  updated_at: 2025-05-17T10:25:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-09-wallet-basic-settings
+  name: "基本設定編集画面 (S-09) 実装"
+  description: "家計簿名変更、参加申請設定、参加コード管理、家計簿削除機能、関連UIの実装。"
+  status: pending
+  depends_on: [T-05-wallet-home]
+  outputs:
+    - "S-09 基本設定編集画面 UIと機能"
+    - "wallets テーブルへのデータ更新・削除処理"
+  created_at: 2025-05-17T10:30:00+09:00
+  updated_at: 2025-05-17T10:30:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-10-member-management
+  name: "参加ユーザー管理画面 (S-10) 実装"
+  description: "参加ユーザー一覧表示、ロール変更、メンバー削除、参加申請一覧表示、申請承認/却下機能、関連UIの実装。"
+  status: pending
+  depends_on: [T-05-wallet-home]
+  outputs:
+    - "S-10 参加ユーザー管理画面 UIと機能"
+    - "wallet_members, wallet_join_requests テーブルへのデータ操作処理"
+  created_at: 2025-05-17T10:35:00+09:00
+  updated_at: 2025-05-17T10:35:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-11-user-settings
+  name: "ユーザー設定画面 (S-11) 実装"
+  description: "プロフィール編集、複数家計簿参加設定、パスワード変更、アカウント削除機能、関連UIの実装。"
+  status: pending
+  depends_on: [T-04-wallet-navigation] # ユーザー設定ストア等を利用するため
+  outputs:
+    - "S-11 ユーザー設定画面 UIと機能"
+    - "users テーブルへのデータ更新・削除処理"
+  created_at: 2025-05-17T10:40:00+09:00
+  updated_at: 2025-05-17T10:40:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-12-pwa-features
+  name: "PWA対応実装"
+  description: "マニフェストファイル、アプリアイコン、Service Worker設定、基本的なオフライン対応。"
+  status: pending
+  depends_on: [T-11-user-settings] # アプリの主要機能が揃ってから
+  outputs:
+    - "public/manifest.json"
+    - "public/icons/ 各種アイコン"
+    - "Service Worker 設定 (next-pwa)"
+  created_at: 2025-05-17T10:45:00+09:00
+  updated_at: 2025-05-17T10:45:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"
+
+- id: T-13-final-tuning-testing
+  name: "UI/UX調整、全体テスト、バグ修正"
+  description: "アプリケーション全体のデザイン調整、レスポンシブ対応、機能テスト、結合テスト、パフォーマンス確認、バグ修正。"
+  status: pending
+  depends_on: [T-12-pwa-features]
+  outputs:
+    - "完成版アプリケーション"
+    - "テストレポート"
+  created_at: 2025-05-17T10:50:00+09:00
+  updated_at: 2025-05-17T10:50:00+09:00
+  logs:
+    - "2025-05-17: タスク登録"

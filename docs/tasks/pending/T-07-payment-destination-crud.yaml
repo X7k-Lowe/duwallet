@@ -1,0 +1,43 @@
+id: T-07-payment-destination-crud
+name: "支払先登録画面 (S-07) 実装"
+description: |
+  支払先登録画面 (S-07) のUIと機能（支払先の登録、一覧表示、編集、削除）を実装する。
+  データは payment_destinations テーブル (D-06) と連携する。
+status: pending
+depends_on: [T-05-wallet-home]
+outputs:
+  - "S-07 支払先登録画面の完成されたUI（S-07_payment_destination.yaml 準拠）"
+  - "支払先の登録・一覧・編集・削除機能"
+  - "支払先名称、支払日タイプ（固定日/月末最終日）、支払日（日）の入力機能"
+  - "入力バリデーション（名称必須、支払日の範囲など）"
+  - "payment_destinations テーブル (D-06) へのCRUD操作ロジック"
+  - "hooks/use-payments.ts (支払先データ取得・操作フック) の実装または更新"
+steps:
+  - id: 1
+    name: "S-07 UIレイアウト実装"
+    description: "S-07_payment_destination.yaml に基づき、ヘッダー、登録済み支払先一覧エリア、新規支払先登録フォームの基本レイアウトを実装。"
+  - id: 2
+    name: "登録済み支払先一覧表示機能実装"
+    description: "アクティブな家計簿の支払先データを payment_destinations テーブルから取得し、一覧表示する。編集・削除ボタンも表示。"
+  - id: 3
+    name: "新規支払先登録フォーム実装"
+    description: "S-07_payment_destination.yaml のフォーム定義に基づき、支払先名称、支払日タイプ（固定日/月末最終日選択）、支払日（日）入力フィールドを実装。"
+  - id: 4
+    name: "支払先登録処理実装"
+    description: "フォーム入力内容を payment_destinations テーブルに保存する処理を実装。"
+  - id: 5
+    name: "支払先編集機能実装"
+    description: "既存の支払先情報をフォームに読み込み編集後、payment_destinations テーブルの該当レコードを更新する機能を実装。"
+  - id: 6
+    name: "支払先削除機能実装"
+    description: "既存の支払先情報を削除する機能（確認ダイアログ付き）を実装し、payment_destinations テーブルから該当レコードを削除。"
+  - id: 7
+    name: "入力バリデーション実装"
+    description: "支払先名称が必須であること、支払日タイプが固定日の場合に支払日が1〜31の範囲であることなど、適切な入力バリデーションを実装。"
+  - id: 8
+    name: "hooks/use-payments.ts 実装/更新"
+    description: "支払先データの取得、追加、更新、削除を行うためのカスタムフックを作成または更新。アクティブウォレットIDを考慮する。"
+created_at: 2025-05-17T10:20:00+09:00
+updated_at: 2025-05-17T10:20:00+09:00
+logs:
+  - "2025-05-17: タスクファイル作成" 
