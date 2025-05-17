@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import { Session, User, AuthError } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
+// import { supabase } from '@/lib/supabase/client'; // この行を削除
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { Database } from '@/types/supabase'; // types/supabase.ts からインポート
+// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'; // この行を削除
+import { createBrowserClient } from '@supabase/ssr'; // この行を追加
 
 interface AuthState {
   session: Session | null;
@@ -11,42 +16,105 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearAuth: () => void;
-  signUp: (email: string, password: string, userData?: Record<string, any>) => Promise<void>;
+  signUp: (email: string, password: string, userData: { user_name: string; gender: string | null;[key: string]: any }) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
 }
 
-// Supabaseクライアントのインポート (実際のパスはプロジェクト構成に合わせる)
-// import { supabase } from '@/lib/supabase/client'; // この行は後で調整
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const useAuthStore = create<AuthState>((set) => ({
-  session: null,
-  user: null,
-  loading: false,
-  error: null,
-  setSession: (session) => set({ session, user: session?.user ?? null }),
-  setUser: (user) => set({ user }),
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
-  clearAuth: () => set({ session: null, user: null, error: null }),
-  // 新規登録アクションの実装
-  signUp: async (email, password, userData) => {
-    set({ loading: true, error: null });
-    console.log('Signing up with', email, userData);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      session: null,
+      user: null,
+      loading: false,
+      error: null,
+      setSession: (session) => set({ session }),
+      setUser: (user) => set({ user }),
+      setLoading: (loading) => set({ loading }),
+      setError: (error) => set({ error }),
+      clearAuth: () => set({ session: null, user: null, error: null, loading: false }),
+      signUp: async (email, password, userData) => {
+        set({ loading: true, error: null });
+        if (!supabaseUrl || !supabaseAnonKey) {
+          set({ loading: false, error: 'Supabase URL or Anon Key is not defined.' });
+          return;
+        }
+        const supabase = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey); // 変更
+        
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              user_name: userData.user_name,
+              gender: userData.gender,
+            },
+          },
+        });
 
-    // ダミーの成功/失敗の分岐
-    const FAKE_SUCCESS = true; // これを false に変えてエラーケースを試す
-    const dummyUser: User = { id: '123', email, app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() };
-    const dummySession: Session = { access_token: 'dummy-access-token', token_type: 'bearer', user: dummyUser, expires_in: 3600, expires_at: Date.now() + 3600000, refresh_token: 'dummy-refresh-token' };
+        if (signUpError) {
+          set({ loading: false, error: signUpError.message, user: null, session: null });
+          return;
+        }
 
-    if (FAKE_SUCCESS) {
-      set({ session: dummySession, user: dummyUser, loading: false, error: null });
-    } else {
-      // AuthError のダミーインスタンスを作成する代わりに、単に文字列のエラーメッセージを設定
-      const DUMMY_ERROR_MESSAGE = "Dummy sign-up error occurred.";
-      set({ error: DUMMY_ERROR_MESSAGE, loading: false, session: null, user: null });
+        if (authData.user && authData.session) {
+          set({
+            loading: false,
+            user: authData.user,
+            session: authData.session,
+            error: null,
+          });
+        } else if (authData.user && !authData.session) {
+          set({
+            loading: false,
+            user: authData.user,
+            session: null, 
+            error: null, 
+          });
+        } else {
+          set({ loading: false, error: 'Sign up successful, but no user data returned.', user: null, session: null });
+        }
+      },
+      signIn: async (email, password) => {
+        set({ loading: true, error: null });
+        if (!supabaseUrl || !supabaseAnonKey) {
+          set({ loading: false, error: 'Supabase URL or Anon Key is not defined.' });
+          return;
+        }
+        const supabase = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey); // 変更
+
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({ // error 変数名を signInError に変更
+          email,
+          password,
+        });
+
+        if (signInError) {
+          set({ loading: false, error: signInError.message, user: null, session: null });
+        } else if (data.user && data.session) {
+          set({
+            loading: false,
+            user: data.user,
+            session: data.session,
+            error: null,
+          });
+        } else {
+          set({
+            loading: false,
+            error: 'Login failed. User or session data is missing.',
+            user: null,
+            session: null,
+          });
+        }
+      },
+    }),
+    {
+      name: 'auth-storage',
+      storage: createJSONStorage(() => sessionStorage),
     }
-  },
-}));
+  )
+);
 
 // 注意: 上記の signUp 実装はダミーです。
 // Supabaseクライアント (`@/lib/supabase/client.ts`) を正しくインポートし、
