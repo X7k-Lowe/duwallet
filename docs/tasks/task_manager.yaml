@@ -54,7 +54,8 @@
   logs:
     - "2025-05-17: タスク登録"
     - "2024-07-28: 新規登録処理 (auth.signUp)、Supabase Function (sync_public_user) および Database Webhook (Auth User Sync) を実装・設定。public.users へのデータ同期は成功。"
-    - "2024-07-29: 新規登録後のクライアントサイドでのセッション取得失敗の問題を調査・修正開始。auth-store.ts と onAuthStateChange の実装を中心に確認。"
+    - "2024-07-29: 新規登録後のクライアントサイドでのセッション取得失敗の問題を調査・修正完了。"
+    - "2024-07-30: Vercelデプロイ時のコンパイルエラーを特定し、修正に着手。"
 
 - id: T-04-wallet-navigation
   name: "家計簿選択・作成・基本ナビゲーション実装 (S-03, S-04)"

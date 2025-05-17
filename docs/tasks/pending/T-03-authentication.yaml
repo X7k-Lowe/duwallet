@@ -37,10 +37,15 @@ steps:
     description: "ログイン・新規登録成功後、適切な画面へリダイレクトするロジックの基礎を実装（詳細はT-04で強化）。"
   - id: 8
     name: "新規登録後のセッション取得失敗の修正"
-    status: "in progress"
+    status: "done"
     description: "新規ユーザー登録後、クライアントサイドでセッションが正しく取得・維持されない問題を修正する。stores/auth-store.ts の signUp 処理、および onAuthStateChange によるセッション監視ロジックを確認・修正する。"
+  - id: 9
+    name: "Vercelデプロイ時コンパイルエラーの調査と修正"
+    status: "in progress"
+    description: "Vercelでのデプロイ時に発生する 'Parsing error: The keyword 'import' is reserved' というコンパイルエラーを調査し修正する。tsconfig.json, eslint.config.mjs, next.config.mjs および関連パッケージのバージョンを確認・修正する。"
 created_at: 2025-05-17T10:00:00+09:00
 updated_at: 2025-05-17T10:00:00+09:00
 logs:
   - "2025-05-17: タスクファイル作成"
-  - "2024-07-29: 新規登録後のセッション取得問題を特定し、修正に着手。ステップ8を追加。" 
+  - "2024-07-29: 新規登録後のセッション取得問題を特定し、修正に着手。ステップ8を追加。"
+  - "2024-07-30: Vercelデプロイ時のコンパイルエラーを特定。ステップ9を追加し、エラー修正に着手。" 
