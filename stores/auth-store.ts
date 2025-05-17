@@ -30,29 +30,20 @@ export const useAuthStore = create<AuthState>((set) => ({
   // 新規登録アクションの実装
   signUp: async (email, password, userData) => {
     set({ loading: true, error: null });
-    // ここで Supabase のクライアントを初期化するか、外部から参照する
-    // const { data, error } = await supabase.auth.signUp({
-    //   email,
-    //   password,
-    //   options: {
-    //     data: userData, // usersテーブルに保存する追加情報
-    //   },
-    // });
-    // ダミー実装 (後でSupabaseクライアントを正しくセットアップする)
     console.log('Signing up with', email, userData);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 疑似的な非同期処理
-    const dummySession = { user: { id: '123', email }, expires_at: Date.now() + 3600000 } as any as Session;
-    const signUpError: AuthError | null = null; // AuthError 型を使用 or new AuthError('Dummy Error')など
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    if (signUpError) {
-      set({ error: signUpError.message, loading: false });
-    } else if (dummySession && dummySession.user) {
-      set({ session: dummySession, user: dummySession.user, loading: false });
-      // usersテーブルへの追加情報の保存は、SupabaseのトリガーやEdge Functionで行うか、
-      // signUpのoptions.data が期待通り動作するか確認の上、別途APIを叩く必要があるかを検討
+    // ダミーの成功/失敗の分岐
+    const FAKE_SUCCESS = true; // これを false に変えてエラーケースを試す
+    const dummyUser: User = { id: '123', email, app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() };
+    const dummySession: Session = { access_token: 'dummy-access-token', token_type: 'bearer', user: dummyUser, expires_in: 3600, expires_at: Date.now() + 3600000, refresh_token: 'dummy-refresh-token' };
+
+    if (FAKE_SUCCESS) {
+      set({ session: dummySession, user: dummyUser, loading: false, error: null });
     } else {
-      // Email confirmation が有効な場合など、sessionやuserがすぐには返らないケースの考慮
-      set({ loading: false, error: 'Unexpected state after sign up.' });
+      // AuthError のダミーインスタンスを作成する代わりに、単に文字列のエラーメッセージを設定
+      const DUMMY_ERROR_MESSAGE = "Dummy sign-up error occurred.";
+      set({ error: DUMMY_ERROR_MESSAGE, loading: false, session: null, user: null });
     }
   },
 }));
