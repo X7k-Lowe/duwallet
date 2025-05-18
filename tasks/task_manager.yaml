@@ -38,7 +38,7 @@
 - id: T-03-authentication
   name: "ユーザー認証機能の実装 (S-01, S-02)"
   status: "done"
-  file_path: "docs/tasks/done/T-03-authentication.yaml"
+  file_path: "tasks/done/T-03-authentication.yaml"
   depends_on:
     - T-02-sync-project-structure
   created_at: 2025-05-17T10:00:00+09:00
@@ -53,7 +53,7 @@
   name: "家計簿選択・作成・基本ナビゲーション実装 (S-03, S-04)"
   description: "アクティブウォレットパターン、ミドルウェアによる画面遷移、家計簿選択・作成画面、ストアの実装。"
   status: done
-  file_path: "docs/tasks/done/T-04-wallet-navigation.yaml"
+  file_path: "tasks/done/T-04-wallet-navigation.yaml"
   depends_on: [T-03-authentication]
   outputs:
     - "アクティブウォレットストア (wallet-store.ts)"

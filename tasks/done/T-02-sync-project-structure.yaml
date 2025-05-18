@@ -27,7 +27,7 @@ steps:
   - id: 3
     name: "成果物・タスク管理の更新"
     description: |
-      - 変更内容・成果物をdocs/tasks/task_manager.yamlに登録
+      - 変更内容・成果物をtasks/task_manager.yamlに登録
       - 本タスク詳細YAMLをpending/に作成
 status: done
 dependencies: [T-01-setup-environment]
