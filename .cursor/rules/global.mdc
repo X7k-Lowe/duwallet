@@ -27,8 +27,8 @@ Description: |
   - DBスキーマ：docs/database_schema/*.md
   - 技術スタック・ディレクトリ構成：docs/specs/*.md
   - 環境構築・Secrets：docs/setup/*.md
-- タスク管理は `docs/tasks/task_manager.yaml` で一元管理し、全タスクをトップレベルの配列でDAG（依存関係）・進捗・履歴・成果物を明示する。
-- 各タスクの詳細は `docs/tasks/pending/` または `docs/tasks/done/` の個別YAMLで管理し、task_manager.yamlから参照・連携する。
+- タスク管理は `tasks/task_manager.yaml` で一元管理し、全タスクをトップレベルの配列でDAG（依存関係）・進捗・履歴・成果物を明示する。
+- 各タスクの詳細は `tasks/pending/` または `tasks/done/` の個別YAMLで管理し、task_manager.yamlから参照・連携する。
 - 【必須】タスクの完了は、vercelデプロイ時の `pnpm run build` でエラーなくタスク内容の動作ができること。
 - タスク完了後は該当YAMLを `done/` へ移動し、`status` を `done` に更新。
 - タスクの依存関係や進捗管理、履歴・成果物の記録もtask_manager.yamlで一元化。
